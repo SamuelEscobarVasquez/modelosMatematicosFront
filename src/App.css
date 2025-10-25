@@ -131,30 +131,293 @@ body {
   border-width: 0.3rem;
 }
 
+.navbar_nav_bar {
+  gap: 10px;
+}
+
 /* 
  * Estilos responsivos para dispositivos móviles
  * Aseguro que todo se vea bien en pantallas pequeñas
  */
+
+/* Tablets y dispositivos medianos (hasta 992px) */
+@media (max-width: 992px) {
+  .navbar-brand {
+    font-size: 0.9rem !important;
+  }
+  
+  .table {
+    font-size: 0.85rem;
+  }
+  
+  .card-title {
+    font-size: 1.1rem;
+  }
+}
+
+/* Móviles grandes y tablets pequeñas (hasta 768px) */
 @media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+  
   .display-4 {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
   
   .h4 {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
   }
   
   .lead {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
   
   .table-responsive {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
+  }
+  
+  .table {
+    font-size: 0.75rem;
+  }
+  
+  .table td, .table th {
+    padding: 0.4rem;
   }
   
   .btn {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+    padding: 6px 12px;
+  }
+  
+  .btn-lg {
+    font-size: 0.85rem;
     padding: 8px 16px;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+  
+  /* Reducir espaciado en móviles */
+  .mb-4 {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .mt-4 {
+    margin-top: 1.5rem !important;
+  }
+  
+  /* Hacer la matriz más legible en móvil */
+  .table input[type="number"] {
+    font-size: 0.75rem;
+    padding: 0.25rem;
+  }
+  
+  /* Ajustar tooltips en móvil */
+  [data-bs-toggle="tooltip"] {
+    font-size: 0.7rem;
+  }
+  
+  /* Hacer los iconos más pequeños */
+  .card-body div[style*="fontSize"] {
+    font-size: 2rem !important;
+  }
+  
+  /* Ajustar navbar en móvil */
+  .navbar-nav {
+    margin-top: 1rem;
+  }
+  
+  .navbar-nav .btn {
+    width: 100%;
+    margin: 0.25rem 0 !important;
+  }
+  
+  /* Ajustar footer en móvil */
+  footer {
+    padding: 1rem;
+    margin-top: 2rem;
+  }
+}
+
+/* Móviles pequeños (hasta 576px) */
+@media (max-width: 576px) {
+  body {
+    font-size: 13px;
+  }
+  
+  .container-fluid {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  .navbar-brand {
+    font-size: 0.75rem !important;
+  }
+  
+  .card {
+    border-radius: 8px;
+  }
+  
+  .card-body {
+    padding: 0.75rem;
+  }
+  
+  .table-responsive {
+    font-size: 0.65rem;
+  }
+  
+  .table {
+    font-size: 0.65rem;
+  }
+  
+  .table td, .table th {
+    padding: 0.3rem 0.2rem;
+    min-width: 60px;
+  }
+  
+  /* Hacer inputs más pequeños */
+  input[type="number"],
+  input[type="text"],
+  select {
+    font-size: 0.7rem !important;
+    padding: 0.25rem 0.35rem !important;
+  }
+  
+  .btn {
+    font-size: 0.65rem;
+    padding: 5px 10px;
+  }
+  
+  .btn-lg {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+  }
+  
+  /* Reducir más el espaciado */
+  .mb-3 {
+    margin-bottom: 1rem !important;
+  }
+  
+  .mb-4 {
+    margin-bottom: 1rem !important;
+  }
+  
+  .mt-3 {
+    margin-top: 1rem !important;
+  }
+  
+  .mt-4 {
+    margin-top: 1rem !important;
+  }
+  
+  /* Ajustar títulos */
+  h1, .h1 {
+    font-size: 1.5rem;
+  }
+  
+  h2, .h2 {
+    font-size: 1.3rem;
+  }
+  
+  h3, .h3 {
+    font-size: 1.1rem;
+  }
+  
+  h4, .h4 {
+    font-size: 1rem;
+  }
+  
+  h5, .h5 {
+    font-size: 0.9rem;
+  }
+  
+  /* Ajustar badges */
+  .badge {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+  }
+  
+  /* Ajustar alertas */
+  .alert {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+  }
+  
+  /* Ajustar modal */
+  .modal-header {
+    padding: 0.75rem;
+  }
+  
+  .modal-body {
+    padding: 0.75rem;
+  }
+  
+  .modal-footer {
+    padding: 0.5rem;
+  }
+  
+  .modal-title {
+    font-size: 1rem;
+  }
+  
+  /* Ajustar progress bar */
+  .progress {
+    height: 6px;
+  }
+  
+  /* Hacer footer más compacto */
+  footer {
+    padding: 0.75rem;
+    margin-top: 1.5rem;
+    font-size: 0.7rem;
+  }
+  
+  /* Ajustar elementos de la matriz */
+  .table td div {
+    font-size: 0.7rem !important;
+  }
+  
+  .table td [style*="position: absolute"] {
+    font-size: 0.6rem !important;
+  }
+}
+
+/* Móviles muy pequeños (hasta 375px) */
+@media (max-width: 375px) {
+  .navbar-brand {
+    font-size: 0.65rem !important;
+  }
+  
+  .table {
+    font-size: 0.6rem;
+  }
+  
+  .table td, .table th {
+    padding: 0.2rem 0.15rem;
+    min-width: 50px;
+  }
+  
+  .btn {
+    font-size: 0.6rem;
+    padding: 4px 8px;
+  }
+  
+  input[type="number"],
+  input[type="text"],
+  select {
+    font-size: 0.65rem !important;
+    padding: 0.2rem 0.3rem !important;
+  }
+  
+  .container-fluid {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
   }
 }
 

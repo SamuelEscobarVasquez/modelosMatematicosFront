@@ -53,3 +53,81 @@ code {
   color: inherit;
 }
 
+/* 
+ * Estilos responsivos adicionales
+ */
+
+/* Prevenir zoom en inputs en iOS */
+@media screen and (max-width: 768px) {
+  input[type="text"],
+  input[type="number"],
+  select,
+  textarea {
+    font-size: 16px !important; /* Previene zoom automático en iOS */
+  }
+}
+
+/* Hacer el modal más accesible en móvil */
+@media (max-width: 576px) {
+  .modal-dialog {
+    max-width: 95%;
+    margin: 0.5rem auto;
+  }
+  
+  .modal-xl {
+    max-width: 95%;
+  }
+}
+
+/* Ajustar clamp para mejores tipografías responsive */
+.fs-responsive {
+  font-size: clamp(0.75rem, 2vw, 1rem);
+}
+
+/* Hacer scroll horizontal más visible en móvil */
+.table-responsive::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Mejorar touch targets en móvil */
+@media (max-width: 768px) {
+  button,
+  a,
+  input[type="button"],
+  input[type="submit"] {
+    min-height: 44px; /* Tamaño mínimo recomendado para touch */
+    min-width: 44px;
+  }
+  
+  .btn-sm {
+    min-height: 36px;
+  }
+}
+
+/* Container padding responsivo */
+.container-fluid {
+  padding-left: clamp(0.5rem, 2vw, 1rem);
+  padding-right: clamp(0.5rem, 2vw, 1rem);
+}
+
+/* Hacer el navbar sticky más eficiente en móvil */
+.sticky-top {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+}

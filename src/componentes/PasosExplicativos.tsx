@@ -1,75 +1,82 @@
-// PasosExplicativos.tsx
-// Componente que muestra la solución paso a paso del método MODI
+// PasosExplicativosMejorado.tsx
+// Componente mejorado para mostrar la solución paso a paso
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { PasoExplicacion } from '../tipos/tipos';
-import { VisualizadorMatrizMejorado } from './VisualizadorMatrizMejorado';
+import { VisualizadorMatriz } from './VisualizadorMatriz';
 
 // Propiedades del componente
-interface PasosExplicativosProps {
-  pasos: PasoExplicacion[];    // Array con todos los pasos de la solución
-  oferta: number[];            // Oferta del problema
-  demanda: number[];           // Demanda del problema
-  nombresOrigenes?: string[];  // Nombres de los orígenes
-  nombresDestinos?: string[];  // Nombres de los destinos
+interface PasosExplicativosMejoradosProps {
+  pasos: PasoExplicacion[];
+  oferta: number[];
+  demanda: number[];
+  nombresOrigenes: string[];
+  nombresDestinos: string[];
 }
 
 /**
- * Componente que muestra la solución paso a paso
- * Permite navegar entre los diferentes pasos del método MODI
+ * Componente mejorado para mostrar pasos explicativos
+ * Incluye las fórmulas y explicaciones detalladas
  */
-export function PasosExplicativos({ pasos, oferta, demanda, nombresOrigenes, nombresDestinos }: PasosExplicativosProps) {
+export function PasosExplicativos({
+  pasos,
+  oferta,
+  demanda,
+  nombresOrigenes,
+  nombresDestinos
+}: PasosExplicativosMejoradosProps) {
   
-  // Estado para controlar qué paso estoy mostrando
   const [pasoActual, setPasoActual] = useState<number>(0);
   
-  // Obtengo el paso actual
+  // Inicializo tooltips de Bootstrap cuando cambia el paso
+  useEffect(() => {
+    // Inicializo tooltips de Bootstrap
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltips = Array.from(tooltipTriggerList).map(
+      (tooltipTriggerEl) => new (window as any).bootstrap.Tooltip(tooltipTriggerEl)
+    );
+    
+    return () => {
+      tooltips.forEach(tooltip => tooltip.dispose());
+    };
+  }, [pasoActual]);
+  
   const paso = pasos[pasoActual];
   
-  /**
-   * Navego al paso anterior
-   */
   const irPasoAnterior = () => {
     if (pasoActual > 0) {
       setPasoActual(pasoActual - 1);
     }
   };
   
-  /**
-   * Navego al paso siguiente
-   */
   const irPasoSiguiente = () => {
     if (pasoActual < pasos.length - 1) {
       setPasoActual(pasoActual + 1);
     }
   };
   
-  /**
-   * Obtengo el color del badge según el tipo de paso
-   */
   const obtenerColorBadge = (tipo: string): string => {
     switch (tipo) {
-      case 'inicial': return 'bg-primary';
+      case 'solucion-inicial': return 'bg-primary';
       case 'calcular-ui-vj': return 'bg-info';
-      case 'calcular-costos-reducidos': return 'bg-warning';
+      case 'calcular-variables-no-basicas': return 'bg-warning text-dark';
       case 'verificar-optimalidad': return 'bg-success';
       case 'mejorar-solucion': return 'bg-danger';
-      case 'final': return 'bg-success';
       default: return 'bg-secondary';
     }
   };
   
   return (
-    <div className="card shadow">
+    <div className="card shadow-sm">
       <div className="card-body">
-        <h4 className="card-title text-primary mb-4">
+        <h4 className="card-title text-primary mb-3">
           📚 Explicación Paso a Paso
         </h4>
         
-        {/* Controles de navegación superiores */}
-        <div className="row mb-4">
+        {/* Navegación */}
+        <div className="row mb-3">
           <div className="col-md-4">
-            <button 
+            <button
               className="btn btn-outline-primary w-100"
               onClick={irPasoAnterior}
               disabled={pasoActual === 0}
@@ -79,20 +86,19 @@ export function PasosExplicativos({ pasos, oferta, demanda, nombresOrigenes, nom
           </div>
           
           <div className="col-md-4 text-center">
-            <div className="fs-5 fw-bold">
+            <div className="fs-6 fw-bold">
               Paso {pasoActual + 1} de {pasos.length}
             </div>
-            <div className="progress mt-2">
-              <div 
+            <div className="progress mt-2" style={{ height: '8px' }}>
+              <div
                 className="progress-bar"
-                role="progressbar"
                 style={{ width: `${((pasoActual + 1) / pasos.length) * 100}%` }}
               />
             </div>
           </div>
           
           <div className="col-md-4">
-            <button 
+            <button
               className="btn btn-outline-primary w-100"
               onClick={irPasoSiguiente}
               disabled={pasoActual === pasos.length - 1}
@@ -102,7 +108,7 @@ export function PasosExplicativos({ pasos, oferta, demanda, nombresOrigenes, nom
           </div>
         </div>
         
-        {/* Información del paso actual */}
+        {/* Información del paso */}
         <div className="alert alert-light border">
           <div className="d-flex align-items-center mb-2">
             <span className={`badge ${obtenerColorBadge(paso.tipo)} me-2`}>
@@ -110,98 +116,132 @@ export function PasosExplicativos({ pasos, oferta, demanda, nombresOrigenes, nom
             </span>
             <h5 className="mb-0">{paso.titulo}</h5>
           </div>
-          
-          <p className="mb-0 mt-2">{paso.descripcion}</p>
+          <p className="mb-0">{paso.descripcion}</p>
         </div>
         
-        {/* Visualización de la matriz si está disponible */}
+        {/* Matriz */}
         {paso.matriz && (
-          <VisualizadorMatrizMejorado
+          <VisualizadorMatriz
             matriz={paso.matriz}
             oferta={oferta}
             demanda={demanda}
-            nombresOrigenes={nombresOrigenes || []}
-            nombresDestinos={nombresDestinos || []}
+            nombresOrigenes={nombresOrigenes}
+            nombresDestinos={nombresDestinos}
             titulo="Estado de la Matriz"
             mostrarCostoTotal={true}
             ui={paso.ui}
             vj={paso.vj}
             variablesNoBasicas={paso.variablesNoBasicas}
             ciclo={paso.ciclo}
+            theta={paso.theta}
           />
         )}
         
-        {/* Información adicional según el tipo de paso */}
-        {paso.tipo === 'calcular-ui-vj' && paso.ui && paso.vj && (
+        {/* Fórmulas de ui y vj */}
+        {paso.tipo === 'calcular-ui-vj' && paso.formulasUI && paso.formulasVJ && (
           <div className="alert alert-info mt-3">
-            <h6>📊 Multiplicadores Calculados:</h6>
+            <h6>📐 Fórmulas para Calcular Multiplicadores:</h6>
+            <p className="mb-2">
+              <strong>Ecuación base:</strong> Para cada celda básica: <code>ui + vj = Cij</code>
+            </p>
+            
             <div className="row">
               <div className="col-md-6">
-                <strong>Valores ui (filas):</strong>
-                <ul className="mb-0">
-                  {paso.ui.map((val, i) => (
-                    <li key={i}>u{i + 1} = {val !== null ? val : 'pendiente'}</li>
+                <strong>Valores ui (multiplicadores de fila):</strong>
+                <ul className="mb-0 mt-2" style={{ fontSize: '0.9rem' }}>
+                  {paso.formulasUI.map((formula, idx) => (
+                    <li key={idx}><code>{formula}</code></li>
                   ))}
                 </ul>
               </div>
+              
               <div className="col-md-6">
-                <strong>Valores vj (columnas):</strong>
-                <ul className="mb-0">
-                  {paso.vj.map((val, j) => (
-                    <li key={j}>v{j + 1} = {val !== null ? val : 'pendiente'}</li>
+                <strong>Valores vj (multiplicadores de columna):</strong>
+                <ul className="mb-0 mt-2" style={{ fontSize: '0.9rem' }}>
+                  {paso.formulasVJ.map((formula, idx) => (
+                    <li key={idx}><code>{formula}</code></li>
                   ))}
                 </ul>
+              </div>
+            </div>
+            
+            {/* Resumen de valores calculados */}
+            <div className="mt-3 p-2 bg-light rounded">
+              <strong>Resumen de valores calculados:</strong>
+              <div className="row mt-2">
+                <div className="col-md-6">
+                  <small>
+                    <strong>ui:</strong>{' '}
+                    {paso.ui?.map((val, i) => (
+                      <span key={i} className="me-2">
+                        u<sub>{i + 1}</sub> = <strong>{val !== null ? val : '?'}</strong>
+                        {i < paso.ui!.length - 1 ? ',' : ''}
+                      </span>
+                    ))}
+                  </small>
+                </div>
+                <div className="col-md-6">
+                  <small>
+                    <strong>vj:</strong>{' '}
+                    {paso.vj?.map((val, j) => (
+                      <span key={j} className="me-2">
+                        v<sub>{j + 1}</sub> = <strong>{val !== null ? val : '?'}</strong>
+                        {j < paso.vj!.length - 1 ? ',' : ''}
+                      </span>
+                    ))}
+                  </small>
+                </div>
               </div>
             </div>
           </div>
         )}
         
-        {paso.tipo === 'mejorar-solucion' && paso.celdaMejora && (
-          <div className="alert alert-warning mt-3">
-            <h6>🔄 Mejorando la Solución:</h6>
+        {/* Variables no básicas */}
+        {paso.tipo === 'calcular-variables-no-basicas' && paso.variablesNoBasicas && (
+          <div className="alert alert-warning">
+            <h6>📊 Cálculo de Variables No Básicas:</h6>
             <p>
-              Encontré que la celda en posición ({paso.celdaMejora.fila + 1}, {paso.celdaMejora.columna + 1}) 
-              tiene un costo reducido negativo, lo que significa que puedo mejorar mi solución 
-              si asigno cantidad a esta celda.
+              <strong>Fórmula:</strong> <code>Ui + Vj - Cij</code>
             </p>
-            {paso.ciclo && paso.ciclo.length > 0 && (
-              <>
-                <p><strong>Ciclo formado:</strong></p>
-                <p className="mb-0">
-                  {paso.ciclo.map((celda, idx) => (
-                    <span key={idx}>
-                      ({celda.fila + 1}, {celda.columna + 1})
-                      {idx < paso.ciclo!.length - 1 ? ' → ' : ''}
-                    </span>
-                  ))}
-                </p>
-              </>
-            )}
+            <p className="mb-0">
+              Donde: <strong>i</strong> = número de fila (origen), 
+              <strong> j</strong> = número de columna (destino)
+            </p>
+            <p className="mt-2 mb-0">
+              Las variables no básicas me indican si puedo mejorar la solución.
+              Si encuentro un valor <strong>positivo</strong>, puedo reducir el costo
+              asignando a esa celda.
+            </p>
           </div>
         )}
         
-        {/* Controles de navegación inferiores */}
-        <div className="row mt-4">
-          <div className="col-md-6">
-            <button 
-              className="btn btn-secondary w-100"
-              onClick={irPasoAnterior}
-              disabled={pasoActual === 0}
-            >
-              ← Paso Anterior
-            </button>
+        {/* Ciclo de mejora */}
+        {paso.tipo === 'mejorar-solucion' && paso.ciclo && paso.theta !== undefined && (
+          <div className="alert alert-danger">
+            <h6>🔄 Ciclo de Mejora Encontrado:</h6>
+            <p>
+              <strong>Valor theta (θ):</strong> {paso.theta}
+            </p>
+            <p>
+              <strong>Secuencia del ciclo:</strong>
+            </p>
+            <div className="bg-white p-2 rounded border">
+              {paso.ciclo.map((celda, idx) => (
+                <span key={idx} className="me-2">
+                  <strong>({celda.fila + 1}, {celda.columna + 1})</strong>
+                  {idx % 2 === 0 ? ' [+θ]' : ' [-θ]'}
+                  {idx < paso.ciclo!.length - 1 && ' → '}
+                </span>
+              ))}
+            </div>
+            <p className="mt-2 mb-0">
+              <small>
+                En las celdas marcadas con <strong>[+θ]</strong> sumo {paso.theta} unidades.
+                En las celdas marcadas con <strong>[-θ]</strong> resto {paso.theta} unidades.
+              </small>
+            </p>
           </div>
-          
-          <div className="col-md-6">
-            <button 
-              className="btn btn-primary w-100"
-              onClick={irPasoSiguiente}
-              disabled={pasoActual === pasos.length - 1}
-            >
-              Paso Siguiente →
-            </button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

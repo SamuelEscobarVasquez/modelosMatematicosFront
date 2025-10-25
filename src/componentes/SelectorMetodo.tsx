@@ -42,27 +42,27 @@ export function SelectorMetodo({ onMetodoSeleccionado, metodoActual }: SelectorM
   return (
     <div className="card shadow mb-4">
       <div className="card-body">
-        <h4 className="card-title mb-4">🔧 Selecciona el Método Inicial</h4>
+        <h4 className="card-title mb-3 mb-md-4">🔧 Selecciona el Método Inicial</h4>
         
-        <p className="text-muted mb-4">
+        <p className="text-muted mb-3 mb-md-4">
           Elige el método que usaré para encontrar una solución inicial. 
           Luego optimizaré esa solución usando el Método de Multiplicadores.
         </p>
         
-        <div className="row justify-content-center">
+        <div className="row justify-content-center g-2 g-md-3">
           {metodos.map((metodo) => (
-            <div key={metodo.id} className="col-md-5 mb-3">
+            <div key={metodo.id} className="col-12 col-sm-6 col-md-5 mb-2 mb-md-3">
               <div 
                 className={`card h-100 ${metodoActual === metodo.id ? 'border-primary border-3' : ''}`}
                 style={{ cursor: 'pointer', transition: 'all 0.3s' }}
                 onClick={() => onMetodoSeleccionado(metodo.id)}
               >
-                <div className="card-body">
-                  <div className="text-center mb-3" style={{ fontSize: '3rem' }}>
+                <div className="card-body p-3 p-md-4">
+                  <div className="text-center mb-2 mb-md-3" style={{ fontSize: 'clamp(2rem, 8vw, 3rem)' }}>
                     {metodo.icono}
                   </div>
                   
-                  <h5 className="card-title text-center">
+                  <h5 className="card-title text-center fs-6 fs-md-5">
                     {metodo.nombre}
                   </h5>
                   
@@ -76,12 +76,12 @@ export function SelectorMetodo({ onMetodoSeleccionado, metodoActual }: SelectorM
                     </span>
                   </p>
                   
-                  <p className="card-text text-muted small">
+                  <p className="card-text text-muted small mb-0">
                     {metodo.descripcion}
                   </p>
                   
                   {metodoActual === metodo.id && (
-                    <div className="text-center mt-3">
+                    <div className="text-center mt-2 mt-md-3">
                       <span className="badge bg-primary">✓ Seleccionado</span>
                     </div>
                   )}

@@ -17,18 +17,18 @@ interface EntradaMatrizModalProps {
  * Permite crear o editar la matriz, oferta, demanda y nombres
  */
 export function EntradaMatrizModal({ mostrar, onCerrar, onProblemaCreado, problemaActual }: EntradaMatrizModalProps) {
-  
+
   // Estado para el tamaño de mi matriz
   const [filas, setFilas] = useState<number>(3);
   const [columnas, setColumnas] = useState<number>(3);
-  
+
   // Estado para los datos del problema
   const [costos, setCostos] = useState<number[][]>(
     Array(3).fill(null).map(() => Array(3).fill(0))
   );
   const [oferta, setOferta] = useState<number[]>(Array(3).fill(0));
   const [demanda, setDemanda] = useState<number[]>(Array(3).fill(0));
-  
+
   // Estado para los nombres personalizados
   const [nombresOrigenes, setNombresOrigenes] = useState<string[]>(
     Array(3).fill(null).map((_, i) => `Origen ${i + 1}`)
@@ -36,7 +36,7 @@ export function EntradaMatrizModal({ mostrar, onCerrar, onProblemaCreado, proble
   const [nombresDestinos, setNombresDestinos] = useState<string[]>(
     Array(3).fill(null).map((_, i) => `Destino ${i + 1}`)
   );
-  
+
   // Si hay un problema actual, cargo sus datos
   useEffect(() => {
     if (problemaActual) {
@@ -49,51 +49,51 @@ export function EntradaMatrizModal({ mostrar, onCerrar, onProblemaCreado, proble
       setNombresDestinos([...problemaActual.nombresDestinos]);
     }
   }, [problemaActual, mostrar]);
-  
+
   /**
    * Cuando cambio el número de filas, ajusto mis arrays
    */
   const handleFilasChange = (nuevasFilas: number) => {
     if (nuevasFilas < 2 || nuevasFilas > 10) return;
-    
+
     setFilas(nuevasFilas);
-    
+
     const nuevosCostos = Array(nuevasFilas).fill(null).map((_, i) =>
       Array(columnas).fill(null).map((_, j) => costos[i]?.[j] ?? 0)
     );
     setCostos(nuevosCostos);
-    
+
     const nuevaOferta = Array(nuevasFilas).fill(null).map((_, i) => oferta[i] ?? 0);
     setOferta(nuevaOferta);
-    
-    const nuevosNombres = Array(nuevasFilas).fill(null).map((_, i) => 
+
+    const nuevosNombres = Array(nuevasFilas).fill(null).map((_, i) =>
       nombresOrigenes[i] ?? `Origen ${i + 1}`
     );
     setNombresOrigenes(nuevosNombres);
   };
-  
+
   /**
    * Cuando cambio el número de columnas, ajusto mis arrays
    */
   const handleColumnasChange = (nuevasColumnas: number) => {
     if (nuevasColumnas < 2 || nuevasColumnas > 10) return;
-    
+
     setColumnas(nuevasColumnas);
-    
+
     const nuevosCostos = Array(filas).fill(null).map((_, i) =>
       Array(nuevasColumnas).fill(null).map((_, j) => costos[i]?.[j] ?? 0)
     );
     setCostos(nuevosCostos);
-    
+
     const nuevaDemanda = Array(nuevasColumnas).fill(null).map((_, i) => demanda[i] ?? 0);
     setDemanda(nuevaDemanda);
-    
-    const nuevosNombres = Array(nuevasColumnas).fill(null).map((_, i) => 
+
+    const nuevosNombres = Array(nuevasColumnas).fill(null).map((_, i) =>
       nombresDestinos[i] ?? `Destino ${i + 1}`
     );
     setNombresDestinos(nuevosNombres);
   };
-  
+
   /**
    * Actualizo un costo específico en la matriz
    */
@@ -102,7 +102,7 @@ export function EntradaMatrizModal({ mostrar, onCerrar, onProblemaCreado, proble
     nuevosCostos[fila][columna] = parseFloat(valor) || 0;
     setCostos(nuevosCostos);
   };
-  
+
   /**
    * Actualizo un valor de oferta
    */
@@ -111,7 +111,7 @@ export function EntradaMatrizModal({ mostrar, onCerrar, onProblemaCreado, proble
     nuevaOferta[fila] = parseFloat(valor) || 0;
     setOferta(nuevaOferta);
   };
-  
+
   /**
    * Actualizo un valor de demanda
    */
@@ -120,7 +120,7 @@ export function EntradaMatrizModal({ mostrar, onCerrar, onProblemaCreado, proble
     nuevaDemanda[columna] = parseFloat(valor) || 0;
     setDemanda(nuevaDemanda);
   };
-  
+
   /**
    * Actualizo el nombre de un origen
    */
@@ -129,7 +129,7 @@ export function EntradaMatrizModal({ mostrar, onCerrar, onProblemaCreado, proble
     nuevosNombres[fila] = valor || `Origen ${fila + 1}`;
     setNombresOrigenes(nuevosNombres);
   };
-  
+
   /**
    * Actualizo el nombre de un destino
    */
@@ -138,28 +138,28 @@ export function EntradaMatrizModal({ mostrar, onCerrar, onProblemaCreado, proble
     nuevosNombres[columna] = valor || `Destino ${columna + 1}`;
     setNombresDestinos(nuevosNombres);
   };
-  
+
   /**
    * Valido y creo el problema de transporte
    */
   const handleCrearProblema = () => {
     const totalOferta = oferta.reduce((sum, val) => sum + val, 0);
     const totalDemanda = demanda.reduce((sum, val) => sum + val, 0);
-    
+
     if (totalOferta !== totalDemanda) {
       alert(`Error: La oferta total (${totalOferta}) debe ser igual a la demanda total (${totalDemanda})`);
       return;
     }
-    
+
     const hayNegativos = costos.some(fila => fila.some(val => val < 0)) ||
-                         oferta.some(val => val < 0) ||
-                         demanda.some(val => val < 0);
-    
+      oferta.some(val => val < 0) ||
+      demanda.some(val => val < 0);
+
     if (hayNegativos) {
       alert('Error: No puede haber valores negativos');
       return;
     }
-    
+
     const problema: ProblemaTransporte = {
       costos: costos.map(fila => [...fila]),
       oferta: [...oferta],
@@ -169,11 +169,11 @@ export function EntradaMatrizModal({ mostrar, onCerrar, onProblemaCreado, proble
       nombresOrigenes: [...nombresOrigenes],
       nombresDestinos: [...nombresDestinos]
     };
-    
+
     onProblemaCreado(problema);
     onCerrar();
   };
-  
+
   /**
    * Cargo un ejemplo predefinido
    */
@@ -212,74 +212,99 @@ export function EntradaMatrizModal({ mostrar, onCerrar, onProblemaCreado, proble
       setNombresDestinos(['Molino 1', 'Molino 2', 'Molino 3', 'Molino 4']);
     }
   };
-  
+
   if (!mostrar) return null;
-  
+
   return (
     <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-      <div className="modal-dialog modal-xl modal-dialog-scrollable">
+      <div className="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered">
         <div className="modal-content">
-          <div className="modal-header bg-primary text-white">
-            <h5 className="modal-title">
-              📊 {problemaActual ? 'Editar' : 'Configurar'} Problema de Transporte
+          <div className="modal-header bg-primary text-white p-2 p-md-3">
+            <h5 className="modal-title fs-6 fs-md-5">
+              📊 {problemaActual ? 'Editar' : 'Configurar'} Problema
             </h5>
             <button type="button" className="btn-close btn-close-white" onClick={onCerrar}></button>
           </div>
-          
-          <div className="modal-body">
+
+          <div className="modal-body p-2 p-md-3">
             {/* Controles de tamaño */}
-            <div className="row mb-3">
-              <div className="col-md-3">
-                <label className="form-label fw-bold">Orígenes (Filas):</label>
+            <div className="row g-2 mb-3">
+              <div className="col-6 col-md-3">
+                <label className="form-label fw-bold small">
+                  <span className="d-none d-sm-inline">Orígenes (Filas):</span>
+                  <span className="d-inline d-sm-none">Orígenes:</span>
+                </label>
                 <input
                   type="number"
-                  className="form-control"
+                  className="form-control form-control-sm"
                   min="2"
                   max="10"
                   value={filas}
                   onChange={(e) => handleFilasChange(parseInt(e.target.value) || 2)}
                 />
               </div>
-              <div className="col-md-3">
-                <label className="form-label fw-bold">Destinos (Columnas):</label>
+              <div className="col-6 col-md-3">
+                <label className="form-label fw-bold small">
+                  <span className="d-none d-sm-inline">Destinos (Columnas):</span>
+                  <span className="d-inline d-sm-none">Destinos:</span>
+                </label>
                 <input
                   type="number"
-                  className="form-control"
+                  className="form-control form-control-sm"
                   min="2"
                   max="10"
                   value={columnas}
                   onChange={(e) => handleColumnasChange(parseInt(e.target.value) || 2)}
                 />
               </div>
-              <div className="col-md-6">
-                <label className="form-label fw-bold">Cargar Ejemplo:</label>
-                <div className="btn-group w-100">
-                  <button className="btn btn-sm btn-outline-secondary" onClick={() => cargarEjemplo(1)}>Ejemplo A</button>
-                  <button className="btn btn-sm btn-outline-secondary" onClick={() => cargarEjemplo(2)}>Ejemplo B</button>
-                  <button className="btn btn-sm btn-outline-secondary" onClick={() => cargarEjemplo(3)}>Ejemplo C</button>
-                  <button className="btn btn-sm btn-outline-secondary" onClick={() => cargarEjemplo(4)}>Silos-Molinos</button>
+              <div className="col-12 col-md-6">
+                <label className="form-label fw-bold small">Cargar Ejemplo:</label>
+                <div className="btn-group w-100" role="group">
+                  <button className="btn btn-sm btn-outline-secondary" onClick={() => cargarEjemplo(1)}>
+                    <span className="d-none d-sm-inline">Ejemplo A</span>
+                    <span className="d-inline d-sm-none">A</span>
+                  </button>
+                  <button className="btn btn-sm btn-outline-secondary" onClick={() => cargarEjemplo(2)}>
+                    <span className="d-none d-sm-inline">Ejemplo B</span>
+                    <span className="d-inline d-sm-none">B</span>
+                  </button>
+                  <button className="btn btn-sm btn-outline-secondary" onClick={() => cargarEjemplo(3)}>
+                    <span className="d-none d-sm-inline">Ejemplo C</span>
+                    <span className="d-inline d-sm-none">C</span>
+                  </button>
+                  <button className="btn btn-sm btn-outline-secondary" onClick={() => cargarEjemplo(4)}>
+                    <span className="d-none d-sm-inline">Silos-Molinos</span>
+                    <span className="d-inline d-sm-none">S-M</span>
+                  </button>
                 </div>
               </div>
             </div>
-            
+
             {/* Tabla de datos */}
             <div className="table-responsive">
-              <table className="table table-bordered table-sm">
+              <table className="table table-bordered table-sm mb-0" style={{ fontSize: 'clamp(0.65rem, 2vw, 0.875rem)' }}>
                 <thead className="table-primary">
                   <tr>
-                    <th className="text-center">Origen \ Destino</th>
+                    <th className="text-center p-1 p-md-2 align-middle">
+                      <span className="d-none d-sm-inline">Origen \ Destino</span>
+                      <span className="d-inline d-sm-none">O\D</span>
+                    </th>
                     {Array(columnas).fill(null).map((_, j) => (
                       <th key={j} className="p-1">
                         <input
                           type="text"
                           className="form-control form-control-sm text-center fw-bold"
+                          style={{ fontSize: 'clamp(0.65rem, 1.8vw, 0.875rem)' }}
                           value={nombresDestinos[j]}
                           onChange={(e) => handleNombreDestinoChange(j, e.target.value)}
-                          placeholder={`Destino ${j + 1}`}
+                          placeholder={`D${j + 1}`}
                         />
                       </th>
                     ))}
-                    <th className="text-center bg-warning">Oferta</th>
+                    <th className="text-center bg-warning p-1 p-md-2">
+                      <span className="d-none d-sm-inline">Oferta</span>
+                      <span className="d-inline d-sm-none">Ofe.</span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -289,9 +314,10 @@ export function EntradaMatrizModal({ mostrar, onCerrar, onProblemaCreado, proble
                         <input
                           type="text"
                           className="form-control form-control-sm fw-bold"
+                          style={{ fontSize: 'clamp(0.65rem, 1.8vw, 0.875rem)' }}
                           value={nombresOrigenes[i]}
                           onChange={(e) => handleNombreOrigenChange(i, e.target.value)}
-                          placeholder={`Origen ${i + 1}`}
+                          placeholder={`O${i + 1}`}
                         />
                       </td>
                       {Array(columnas).fill(null).map((_, j) => (
@@ -299,6 +325,7 @@ export function EntradaMatrizModal({ mostrar, onCerrar, onProblemaCreado, proble
                           <input
                             type="number"
                             className="form-control form-control-sm text-center"
+                            style={{ fontSize: 'clamp(0.65rem, 1.8vw, 0.875rem)', padding: 'clamp(0.2rem, 0.5vw, 0.35rem)' }}
                             value={costos[i][j]}
                             onChange={(e) => handleCostoChange(i, j, e.target.value)}
                             min="0"
@@ -310,6 +337,7 @@ export function EntradaMatrizModal({ mostrar, onCerrar, onProblemaCreado, proble
                         <input
                           type="number"
                           className="form-control form-control-sm text-center fw-bold"
+                          style={{ fontSize: 'clamp(0.65rem, 1.8vw, 0.875rem)', padding: 'clamp(0.2rem, 0.5vw, 0.35rem)' }}
                           value={oferta[i]}
                           onChange={(e) => handleOfertaChange(i, e.target.value)}
                           min="0"
@@ -319,12 +347,16 @@ export function EntradaMatrizModal({ mostrar, onCerrar, onProblemaCreado, proble
                     </tr>
                   ))}
                   <tr className="table-success">
-                    <td className="text-center fw-bold">Demanda</td>
+                    <td className="text-center fw-bold p-1 p-md-2">
+                      <span className="d-none d-sm-inline">Demanda</span>
+                      <span className="d-inline d-sm-none">Dem.</span>
+                    </td>
                     {Array(columnas).fill(null).map((_, j) => (
                       <td key={j} className="p-1">
                         <input
                           type="number"
                           className="form-control form-control-sm text-center fw-bold"
+                          style={{ fontSize: 'clamp(0.65rem, 1.8vw, 0.875rem)', padding: 'clamp(0.2rem, 0.5vw, 0.35rem)' }}
                           value={demanda[j]}
                           onChange={(e) => handleDemandaChange(j, e.target.value)}
                           min="0"
@@ -337,21 +369,24 @@ export function EntradaMatrizModal({ mostrar, onCerrar, onProblemaCreado, proble
                 </tbody>
               </table>
             </div>
-            
+
             {/* Resumen */}
-            <div className="alert alert-info">
-              <strong>Total Oferta:</strong> {oferta.reduce((sum, val) => sum + val, 0)} &nbsp;|&nbsp;
-              <strong>Total Demanda:</strong> {demanda.reduce((sum, val) => sum + val, 0)}
-              {oferta.reduce((sum, val) => sum + val, 0) === demanda.reduce((sum, val) => sum + val, 0) ? 
-                <span className="text-success"> ✓ Balanceado</span> : 
-                <span className="text-danger"> ✗ No balanceado</span>
-              }
+            <div className="alert alert-info mt-2 mb-0 p-2 p-md-3">
+              <div className="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-2">
+                <span><strong>Total Oferta:</strong> {oferta.reduce((sum, val) => sum + val, 0)}</span>
+                <span className="d-none d-sm-inline">|</span>
+                <span><strong>Total Demanda:</strong> {demanda.reduce((sum, val) => sum + val, 0)}</span>
+                {oferta.reduce((sum, val) => sum + val, 0) === demanda.reduce((sum, val) => sum + val, 0) ?
+                  <span className="text-success fw-bold">✓ Balanceado</span> :
+                  <span className="text-danger fw-bold">✗ No balanceado</span>
+                }
+              </div>
             </div>
           </div>
-          
-          <div className="modal-footer">
-            <button className="btn btn-secondary" onClick={onCerrar}>Cancelar</button>
-            <button className="btn btn-primary" onClick={handleCrearProblema}>
+
+          <div className="modal-footer p-2 p-md-3">
+            <button className="btn btn-secondary btn-sm" onClick={onCerrar}>Cancelar</button>
+            <button className="btn btn-primary btn-sm" onClick={handleCrearProblema}>
               {problemaActual ? 'Guardar Cambios' : 'Crear Problema'}
             </button>
           </div>

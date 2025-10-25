@@ -7,11 +7,11 @@ import type { ProblemaTransporte, MetodoInicial, Celda, PasoExplicacion } from '
 import { EntradaMatrizModal } from './componentes/EntradaMatrizModal';
 import { BarraNavegacion } from './componentes/BarraNavegacion';
 import { SelectorMetodo } from './componentes/SelectorMetodo';
-import { VisualizadorMatrizMejorado } from './componentes/VisualizadorMatrizMejorado';
-import { PasosExplicativosMejorados } from './componentes/PasosExplicativosMejorados';
 import { esquinaNoroeste, costoMinimo } from './utilidades/metodosIniciales';
 import { metodoMODI, calcularCostoTotal } from './utilidades/metodoMODI';
 import './App.css';
+import { VisualizadorMatriz } from './componentes/VisualizadorMatriz';
+import { PasosExplicativos } from './componentes/PasosExplicativos';
 
 /**
  * Componente principal de la aplicación
@@ -200,7 +200,7 @@ function App() {
             {/* Comparación lado a lado */}
             <div className="row mb-3">
               <div className="col-lg-6">
-                <VisualizadorMatrizMejorado
+                <VisualizadorMatriz
                   matriz={solucionInicial}
                   oferta={problema.oferta}
                   demanda={problema.demanda}
@@ -214,7 +214,7 @@ function App() {
               </div>
               
               <div className="col-lg-6">
-                <VisualizadorMatrizMejorado
+                <VisualizadorMatriz
                   matriz={solucionOptima}
                   oferta={problema.oferta}
                   demanda={problema.demanda}
@@ -230,32 +230,32 @@ function App() {
             <div className="row">
               <div className="col-12">
                 <div className="card shadow-sm mb-3">
-                  <div className="card-body">
-                    <h5 className="card-title text-primary mb-3">📈 Comparación de Resultados</h5>
+                  <div className="card-body p-2 p-md-3">
+                    <h5 className="card-title text-primary mb-2 mb-md-3 fs-6 fs-md-5">📈 Comparación de Resultados</h5>
                     
-                    <div className="row text-center g-3">
-                      <div className="col-md-4">
-                        <div className="p-3 bg-light rounded">
-                          <h6 className="text-muted">Costo Inicial</h6>
-                          <p className="display-6 fw-bold text-warning mb-0">
+                    <div className="row text-center g-2 g-md-3">
+                      <div className="col-12 col-sm-4">
+                        <div className="p-2 p-md-3 bg-light rounded">
+                          <h6 className="text-muted small">Costo Inicial</h6>
+                          <p className="fs-4 fs-md-2 fw-bold text-warning mb-0">
                             ${calcularCostoTotal(solucionInicial).toFixed(2)}
                           </p>
                         </div>
                       </div>
                       
-                      <div className="col-md-4">
-                        <div className="p-3 bg-light rounded">
-                          <h6 className="text-muted">Costo Óptimo</h6>
-                          <p className="display-6 fw-bold text-success mb-0">
+                      <div className="col-12 col-sm-4">
+                        <div className="p-2 p-md-3 bg-light rounded">
+                          <h6 className="text-muted small">Costo Óptimo</h6>
+                          <p className="fs-4 fs-md-2 fw-bold text-success mb-0">
                             ${calcularCostoTotal(solucionOptima).toFixed(2)}
                           </p>
                         </div>
                       </div>
                       
-                      <div className="col-md-4">
-                        <div className="p-3 bg-light rounded">
-                          <h6 className="text-muted">Ahorro</h6>
-                          <p className="display-6 fw-bold text-primary mb-0">
+                      <div className="col-12 col-sm-4">
+                        <div className="p-2 p-md-3 bg-light rounded">
+                          <h6 className="text-muted small">Ahorro</h6>
+                          <p className="fs-4 fs-md-2 fw-bold text-primary mb-0">
                             ${(calcularCostoTotal(solucionInicial) - calcularCostoTotal(solucionOptima)).toFixed(2)}
                           </p>
                         </div>
@@ -272,7 +272,7 @@ function App() {
         {!resolviendo && mostrandoPasos && pasos.length > 0 && problema && (
           <div className="row">
             <div className="col-12">
-              <PasosExplicativosMejorados
+              <PasosExplicativos
                 pasos={pasos}
                 oferta={problema.oferta}
                 demanda={problema.demanda}
@@ -293,20 +293,20 @@ function App() {
       />
       
       {/* Footer */}
-      <footer className="bg-white border-top py-4 mt-5">
-        <div className="container text-center text-muted">
-          <p className="mb-2 fw-bold">
+      <footer className="bg-white border-top py-3 py-md-4 mt-4 mt-md-5">
+        <div className="container text-center text-muted px-2">
+          <p className="mb-2 fw-bold fs-6 fs-md-5">
             💡 Sistema de Investigación de Operaciones - Método Multiplicadores
           </p>
-          <div className="row justify-content-center">
-            <div className="col-md-8">
-              <small className="d-block mb-1">
+          <div className="row justify-content-center g-1">
+            <div className="col-12 col-md-8">
+              <small className="d-block mb-1" style={{ fontSize: 'clamp(0.7rem, 2vw, 0.875rem)' }}>
                 <strong>Jeferson David Espina Zabala</strong> - 5190-23-2907
               </small>
-              <small className="d-block mb-1">
+              <small className="d-block mb-1" style={{ fontSize: 'clamp(0.7rem, 2vw, 0.875rem)' }}>
                 <strong>Luis Alejandro Corado Castellanos</strong> - 5190-23-4073
               </small>
-              <small className="d-block">
+              <small className="d-block" style={{ fontSize: 'clamp(0.7rem, 2vw, 0.875rem)' }}>
                 <strong>Samuel Isaac Escobar Vasquez</strong> - 5190-23-1952
               </small>
             </div>
