@@ -3,7 +3,8 @@
 // Esto me ayuda a mantener el código organizado y evitar errores
 
 // Defino los tipos de métodos iniciales que puedo usar para encontrar una solución inicial
-export type MetodoInicial = 'esquina-noroeste' | 'costo-minimo' | 'vogel';
+// Tipo para el método inicial que el usuario puede elegir
+export type MetodoInicial = 'esquina-noroeste' | 'costo-minimo';
 
 // Esta es la estructura de mi celda en la matriz de transporte
 // Cada celda tiene un costo, una asignación (cantidad transportada) y si está siendo usada

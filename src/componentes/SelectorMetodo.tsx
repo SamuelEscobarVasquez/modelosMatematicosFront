@@ -11,7 +11,7 @@ interface SelectorMetodoProps {
 
 /**
  * Componente para seleccionar el método inicial de solución
- * Ofrece tres opciones: Esquina Noroeste, Costo Mínimo y Vogel
+ * Ofrece dos opciones: Esquina Noroeste y Costo Mínimo
  */
 export function SelectorMetodo({ onMetodoSeleccionado, metodoActual }: SelectorMetodoProps) {
   
@@ -33,16 +33,9 @@ export function SelectorMetodo({ onMetodoSeleccionado, metodoActual }: SelectorM
     {
       id: 'costo-minimo',
       nombre: 'Costo Mínimo',
-      descripcion: 'Método intermedio. Asigno primero a las celdas con menor costo, buscando minimizar el costo total desde el inicio.',
+      descripcion: 'Método que asigna primero a las celdas con menor costo, buscando minimizar el costo total desde el inicio.',
       icono: '💰',
       nivel: 'Intermedio'
-    },
-    {
-      id: 'vogel',
-      nombre: 'Método de Vogel (VAM)',
-      descripcion: 'El método más sofisticado. Calculo penalizaciones para tomar decisiones más inteligentes sobre dónde asignar.',
-      icono: '🎯',
-      nivel: 'Avanzado'
     }
   ];
   
@@ -56,9 +49,9 @@ export function SelectorMetodo({ onMetodoSeleccionado, metodoActual }: SelectorM
           Luego optimizaré esa solución usando el Método de Multiplicadores.
         </p>
         
-        <div className="row">
+        <div className="row justify-content-center">
           {metodos.map((metodo) => (
-            <div key={metodo.id} className="col-md-4 mb-3">
+            <div key={metodo.id} className="col-md-5 mb-3">
               <div 
                 className={`card h-100 ${metodoActual === metodo.id ? 'border-primary border-3' : ''}`}
                 style={{ cursor: 'pointer', transition: 'all 0.3s' }}

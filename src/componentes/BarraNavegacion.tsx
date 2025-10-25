@@ -106,9 +106,7 @@ export function BarraNavegacion({
                 <span className="navbar-text text-white ms-3">
                   <small>
                     Método: <strong>
-                      {metodoActual === 'esquina-noroeste' ? 'Esquina Noroeste' :
-                       metodoActual === 'costo-minimo' ? 'Costo Mínimo' :
-                       'Vogel'}
+                      {metodoActual === 'esquina-noroeste' ? 'Esquina Noroeste' : 'Costo Mínimo'}
                     </strong>
                   </small>
                 </span>

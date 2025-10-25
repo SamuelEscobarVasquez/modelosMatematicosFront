@@ -27,14 +27,10 @@ export function metodoMODI(
     pasos.push({
       tipo: 'solucion-inicial',
       titulo: `Solución Inicial - Método ${
-        metodoInicialUsado === 'esquina-noroeste' ? 'Esquina Noroeste' :
-        metodoInicialUsado === 'costo-minimo' ? 'Costo Mínimo' :
-        'Vogel (VAM)'
+        metodoInicialUsado === 'esquina-noroeste' ? 'Esquina Noroeste' : 'Costo Mínimo'
       }`,
       descripcion: `He obtenido esta solución inicial usando el método ${
-        metodoInicialUsado === 'esquina-noroeste' ? 'de la Esquina Noroeste' :
-        metodoInicialUsado === 'costo-minimo' ? 'del Costo Mínimo' :
-        'de Vogel'
+        metodoInicialUsado === 'esquina-noroeste' ? 'de la Esquina Noroeste' : 'del Costo Mínimo'
       }. Ahora voy a verificar si es óptima y optimizarla usando el Método de Multiplicadores.`,
       matriz: JSON.parse(JSON.stringify(solucionActual)),
       metodoInicial: metodoInicialUsado

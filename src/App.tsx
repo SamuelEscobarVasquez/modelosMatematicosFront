@@ -9,7 +9,7 @@ import { BarraNavegacion } from './componentes/BarraNavegacion';
 import { SelectorMetodo } from './componentes/SelectorMetodo';
 import { VisualizadorMatrizMejorado } from './componentes/VisualizadorMatrizMejorado';
 import { PasosExplicativosMejorados } from './componentes/PasosExplicativosMejorados';
-import { esquinaNoroeste, costoMinimo, vogel } from './utilidades/metodosIniciales';
+import { esquinaNoroeste, costoMinimo } from './utilidades/metodosIniciales';
 import { metodoMODI, calcularCostoTotal } from './utilidades/metodoMODI';
 import './App.css';
 
@@ -101,16 +101,10 @@ function App() {
       // Obtengo la solución inicial según el método seleccionado
       let solucionInicialCalculada: Celda[][];
       
-      switch (metodo) {
-        case 'esquina-noroeste':
-          solucionInicialCalculada = esquinaNoroeste(problema);
-          break;
-        case 'costo-minimo':
-          solucionInicialCalculada = costoMinimo(problema);
-          break;
-        case 'vogel':
-          solucionInicialCalculada = vogel(problema);
-          break;
+      if (metodo === 'esquina-noroeste') {
+        solucionInicialCalculada = esquinaNoroeste(problema);
+      } else {
+        solucionInicialCalculada = costoMinimo(problema);
       }
       
       setSolucionInicial(solucionInicialCalculada);
@@ -213,9 +207,7 @@ function App() {
                   nombresOrigenes={problema.nombresOrigenes}
                   nombresDestinos={problema.nombresDestinos}
                   titulo={`📊 Solución Inicial - ${
-                    metodoSeleccionado === 'esquina-noroeste' ? 'Esquina Noroeste' :
-                    metodoSeleccionado === 'costo-minimo' ? 'Costo Mínimo' :
-                    'Vogel (VAM)'
+                    metodoSeleccionado === 'esquina-noroeste' ? 'Esquina Noroeste' : 'Costo Mínimo'
                   }`}
                   mostrarCostoTotal={true}
                 />
