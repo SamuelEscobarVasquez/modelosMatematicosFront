@@ -1,42 +1,208 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* App.css */
+/* Estilos personalizados para mi aplicación de Investigación de Operaciones */
+
+/* 
+ * Estilos generales del cuerpo de la aplicación
+ * Uso una fuente suave y un fondo claro
+ */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
+/* 
+ * Mejoro el aspecto de las tarjetas
+ * Les doy sombra y bordes redondeados para mejor UX
+ */
 .card {
-  padding: 2em;
+  border-radius: 12px;
+  border: none;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.read-the-docs {
-  color: #888;
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
 }
+
+/* 
+ * Estilos para las tablas
+ * Hago que se vean más profesionales y fáciles de leer
+ */
+.table {
+  background-color: white;
+}
+
+.table th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  letter-spacing: 0.5px;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+/* 
+ * Mejoro la apariencia de los inputs dentro de las tablas
+ * Los hago más compactos y visualmente atractivos
+ */
+.table input[type="number"] {
+  border: 1px solid #dee2e6;
+  transition: all 0.3s;
+}
+
+.table input[type="number"]:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+/* 
+ * Estilos para los botones
+ * Añado efectos hover para mejor feedback visual
+ */
+.btn {
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 500;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.875rem;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-lg {
+  padding: 12px 24px;
+  font-size: 1rem;
+}
+
+/* 
+ * Estilos para la barra de progreso
+ * La hago más atractiva visualmente
+ */
+.progress {
+  height: 8px;
+  border-radius: 4px;
+  background-color: #e9ecef;
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, #0d6efd 0%, #0dcaf0 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* 
+ * Mejoro el aspecto de las alertas
+ * Les doy bordes suaves y mejor espaciado
+ */
+.alert {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* 
+ * Estilos para los badges
+ * Los hago más prominentes y legibles
+ */
+.badge {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+/* 
+ * Animación para el spinner de carga
+ * Añado una rotación suave
+ */
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  border-width: 0.3rem;
+}
+
+/* 
+ * Estilos responsivos para dispositivos móviles
+ * Aseguro que todo se vea bien en pantallas pequeñas
+ */
+@media (max-width: 768px) {
+  .display-4 {
+    font-size: 2rem;
+  }
+  
+  .h4 {
+    font-size: 1.25rem;
+  }
+  
+  .lead {
+    font-size: 1rem;
+  }
+  
+  .table-responsive {
+    font-size: 0.875rem;
+  }
+  
+  .btn {
+    font-size: 0.75rem;
+    padding: 8px 16px;
+  }
+}
+
+/* 
+ * Efecto de hover para las tarjetas seleccionables
+ * Les doy feedback visual cuando paso el mouse
+ */
+.card[style*="cursor: pointer"]:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 
+ * Estilos para el footer
+ * Lo hago sutil pero visible
+ */
+footer {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-top: 3rem;
+}
+
+/* 
+ * Mejoro la apariencia de los números en las celdas de la matriz
+ * Los hago más legibles
+ */
+.table td div {
+  line-height: 1.2;
+}
+
+/* 
+ * Transición suave para todos los elementos
+ */
+* {
+  scroll-behavior: smooth;
+}
+
+/* 
+ * Estilos para las celdas básicas de la tabla
+ * Les doy un color verde suave para destacarlas
+ */
+.table-success {
+  background-color: rgba(25, 135, 84, 0.1) !important;
+}
+
+.table-success.table-success {
+  background-color: rgba(25, 135, 84, 0.15) !important;
+}
+
