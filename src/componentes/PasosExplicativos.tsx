@@ -3,20 +3,22 @@
 
 import { useState } from 'react';
 import type { PasoExplicacion } from '../tipos/tipos';
-import { VisualizadorMatriz } from './VisualizadorMatriz';
+import { VisualizadorMatrizMejorado } from './VisualizadorMatrizMejorado';
 
 // Propiedades del componente
 interface PasosExplicativosProps {
   pasos: PasoExplicacion[];    // Array con todos los pasos de la solución
   oferta: number[];            // Oferta del problema
   demanda: number[];           // Demanda del problema
+  nombresOrigenes?: string[];  // Nombres de los orígenes
+  nombresDestinos?: string[];  // Nombres de los destinos
 }
 
 /**
  * Componente que muestra la solución paso a paso
  * Permite navegar entre los diferentes pasos del método MODI
  */
-export function PasosExplicativos({ pasos, oferta, demanda }: PasosExplicativosProps) {
+export function PasosExplicativos({ pasos, oferta, demanda, nombresOrigenes, nombresDestinos }: PasosExplicativosProps) {
   
   // Estado para controlar qué paso estoy mostrando
   const [pasoActual, setPasoActual] = useState<number>(0);
@@ -114,15 +116,18 @@ export function PasosExplicativos({ pasos, oferta, demanda }: PasosExplicativosP
         
         {/* Visualización de la matriz si está disponible */}
         {paso.matriz && (
-          <VisualizadorMatriz
+          <VisualizadorMatrizMejorado
             matriz={paso.matriz}
             oferta={oferta}
             demanda={demanda}
+            nombresOrigenes={nombresOrigenes || []}
+            nombresDestinos={nombresDestinos || []}
             titulo="Estado de la Matriz"
             mostrarCostoTotal={true}
             ui={paso.ui}
             vj={paso.vj}
-            costosReducidos={paso.costosReducidos}
+            variablesNoBasicas={paso.variablesNoBasicas}
+            ciclo={paso.ciclo}
           />
         )}
         

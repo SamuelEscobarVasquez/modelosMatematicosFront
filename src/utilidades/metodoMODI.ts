@@ -2,7 +2,7 @@
 // Implementación del Método de Multiplicadores (MODI - Modified Distribution Method)
 // Este método optimiza una solución inicial usando multiplicadores ui y vj
 
-import type { ProblemaTransporte, Celda, PasoExplicacion } from '../tipos/tipos';
+import type { ProblemaTransporte, Celda, PasoExplicacion, MetodoInicial } from '../tipos/tipos';
 
 /**
  * MÉTODO MODI (Modified Distribution Method)
@@ -12,6 +12,7 @@ import type { ProblemaTransporte, Celda, PasoExplicacion } from '../tipos/tipos'
 export function metodoMODI(
   problema: ProblemaTransporte,
   solucionInicial: Celda[][],
+  metodoInicialUsado: MetodoInicial,
   generarPasos: boolean = false
 ): { solucion: Celda[][], pasos: PasoExplicacion[], esOptima: boolean } {
   
@@ -21,13 +22,22 @@ export function metodoMODI(
   let iteracion = 0;
   const maxIteraciones = 100; // Límite para evitar bucles infinitos
   
-  // Agrego el paso inicial
+  // Agrego el paso de la solución inicial
   if (generarPasos) {
     pasos.push({
-      tipo: 'inicial',
-      titulo: 'Solución Inicial',
-      descripcion: `Esta es mi solución inicial. Ahora voy a verificar si es óptima usando el método MODI.`,
-      matriz: JSON.parse(JSON.stringify(solucionActual))
+      tipo: 'solucion-inicial',
+      titulo: `Solución Inicial - Método ${
+        metodoInicialUsado === 'esquina-noroeste' ? 'Esquina Noroeste' :
+        metodoInicialUsado === 'costo-minimo' ? 'Costo Mínimo' :
+        'Vogel (VAM)'
+      }`,
+      descripcion: `He obtenido esta solución inicial usando el método ${
+        metodoInicialUsado === 'esquina-noroeste' ? 'de la Esquina Noroeste' :
+        metodoInicialUsado === 'costo-minimo' ? 'del Costo Mínimo' :
+        'de Vogel'
+      }. Ahora voy a verificar si es óptima y optimizarla usando el Método MODI (Multiplicadores).`,
+      matriz: JSON.parse(JSON.stringify(solucionActual)),
+      metodoInicial: metodoInicialUsado
     });
   }
 
@@ -37,43 +47,47 @@ export function metodoMODI(
     
     // PASO 1: Calculo los multiplicadores ui y vj
     // Para las celdas básicas se cumple: ui + vj = cij
-    const { ui, vj } = calcularMultiplicadores(problema, solucionActual);
+    const { ui, vj, formulasUI, formulasVJ } = calcularMultiplicadores(problema, solucionActual);
     
     if (generarPasos) {
       pasos.push({
         tipo: 'calcular-ui-vj',
-        titulo: `Iteración ${iteracion}: Calcular Multiplicadores`,
-        descripcion: `Calculo los valores ui (para filas) y vj (para columnas). Para cada celda básica debe cumplirse: ui + vj = costo de la celda.`,
+        titulo: `Iteración ${iteracion}: Calcular Multiplicadores ui y vj`,
+        descripcion: `Calculo los valores ui (para filas) y vj (para columnas). Para cada celda básica debe cumplirse la ecuación: ui + vj = Cij (costo de la celda). Inicio con u₁ = 0 y despejo las demás ecuaciones.`,
         matriz: JSON.parse(JSON.stringify(solucionActual)),
+        ui: [...ui],
+        vj: [...vj],
+        formulasUI,
+        formulasVJ
+      });
+    }
+    
+    // PASO 2: Calculo las variables no básicas
+    // Fórmula: Ui + Vj - Cij
+    const variablesNoBasicas = calcularCostosReducidos(problema, solucionActual, ui, vj);
+    
+    if (generarPasos) {
+      pasos.push({
+        tipo: 'calcular-variables-no-basicas',
+        titulo: `Iteración ${iteracion}: Calcular Variables No Básicas`,
+        descripcion: `Para cada celda no básica, calculo la variable no básica usando la fórmula: Ui + Vj - Cij. Si todas son ≤ 0, la solución es óptima. Si hay valores positivos, busco el mayor (theta) para mejorar.`,
+        matriz: JSON.parse(JSON.stringify(solucionActual)),
+        variablesNoBasicas: variablesNoBasicas.map(fila => [...fila]),
         ui: [...ui],
         vj: [...vj]
       });
     }
     
-    // PASO 2: Calculo los costos reducidos para las celdas no básicas
-    // Costo reducido = cij - (ui + vj)
-    const costosReducidos = calcularCostosReducidos(problema, solucionActual, ui, vj);
-    
-    if (generarPasos) {
-      pasos.push({
-        tipo: 'calcular-costos-reducidos',
-        titulo: `Iteración ${iteracion}: Calcular Costos Reducidos`,
-        descripcion: `Para cada celda no básica, calculo el costo reducido: cij - (ui + vj). Si todos son >= 0, la solución es óptima.`,
-        matriz: JSON.parse(JSON.stringify(solucionActual)),
-        costosReducidos: costosReducidos.map(fila => [...fila])
-      });
-    }
-    
     // PASO 3: Verifico si la solución es óptima
-    // La solución es óptima si todos los costos reducidos son >= 0
-    const { esOptima, celdaMejora } = verificarOptimalidad(costosReducidos, solucionActual);
+    // La solución es óptima si todas las variables no básicas son <= 0
+    const { esOptima, celdaMejora } = verificarOptimalidad(variablesNoBasicas, solucionActual);
     
     if (esOptima) {
       if (generarPasos) {
         pasos.push({
           tipo: 'verificar-optimalidad',
           titulo: `Iteración ${iteracion}: Solución Óptima Encontrada`,
-          descripcion: `Todos los costos reducidos son >= 0, por lo tanto esta es mi solución óptima.`,
+          descripcion: `Todas las variables no básicas son ≤ 0, por lo tanto esta es mi solución óptima. ¡He encontrado la mejor distribución posible!`,
           matriz: JSON.parse(JSON.stringify(solucionActual))
         });
       }
@@ -85,14 +99,25 @@ export function metodoMODI(
     // Encuentro un ciclo y ajusto las asignaciones
     const ciclo = encontrarCiclo(solucionActual, celdaMejora!);
     
+    // Calculo theta (la cantidad a ajustar)
+    let theta = Infinity;
+    for (let k = 1; k < ciclo.length; k += 2) {
+      const { fila, columna } = ciclo[k];
+      if (solucionActual[fila][columna].asignacion < theta) {
+        theta = solucionActual[fila][columna].asignacion;
+      }
+    }
+    
     if (generarPasos) {
       pasos.push({
         tipo: 'mejorar-solucion',
         titulo: `Iteración ${iteracion}: Mejorar Solución`,
-        descripcion: `Encontré una celda con costo reducido negativo en (${celdaMejora!.fila + 1}, ${celdaMejora!.columna + 1}). Formo un ciclo y ajusto las asignaciones para mejorar la solución.`,
+        descripcion: `Encontré que la celda en posición (${celdaMejora!.fila + 1}, ${celdaMejora!.columna + 1}) tiene el valor theta (variable no básica) más positivo = ${variablesNoBasicas[celdaMejora!.fila][celdaMejora!.columna]}. Formo un ciclo cerrado y ajusto las asignaciones sumando y restando θ = ${theta} alternadamamente.`,
         matriz: JSON.parse(JSON.stringify(solucionActual)),
         celdaMejora: celdaMejora || undefined,
-        ciclo
+        ciclo,
+        theta,
+        variablesNoBasicas: variablesNoBasicas.map(fila => [...fila])
       });
     }
     
@@ -111,13 +136,16 @@ export function metodoMODI(
 function calcularMultiplicadores(
   problema: ProblemaTransporte,
   solucion: Celda[][]
-): { ui: (number | null)[], vj: (number | null)[] } {
+): { ui: (number | null)[], vj: (number | null)[], formulasUI: string[], formulasVJ: string[] } {
   
   const ui: (number | null)[] = Array(problema.filas).fill(null);
   const vj: (number | null)[] = Array(problema.columnas).fill(null);
+  const formulasUI: string[] = Array(problema.filas).fill('');
+  const formulasVJ: string[] = Array(problema.columnas).fill('');
   
-  // Empiezo asignando u0 = 0 (primera fila)
+  // Empiezo asignando u1 = 0 (primera fila)
   ui[0] = 0;
+  formulasUI[0] = 'u₁ = 0 (valor inicial)';
   
   // Necesito resolver el sistema de ecuaciones
   // Uso un enfoque iterativo hasta que todos los valores estén calculados
@@ -138,11 +166,13 @@ function calcularMultiplicadores(
           // Si conozco ui, puedo calcular vj
           if (ui[i] !== null && vj[j] === null) {
             vj[j] = costo - ui[i]!;
+            formulasVJ[j] = `v${j + 1} = C${i + 1}${j + 1} - u${i + 1} = ${costo} - ${ui[i]} = ${vj[j]}`;
             cambios = true;
           }
           // Si conozco vj, puedo calcular ui
           else if (vj[j] !== null && ui[i] === null) {
             ui[i] = costo - vj[j]!;
+            formulasUI[i] = `u${i + 1} = C${i + 1}${j + 1} - v${j + 1} = ${costo} - ${vj[j]} = ${ui[i]}`;
             cambios = true;
           }
         }
@@ -150,12 +180,12 @@ function calcularMultiplicadores(
     }
   }
   
-  return { ui, vj };
+  return { ui, vj, formulasUI, formulasVJ };
 }
 
 /**
  * Calcula los costos reducidos para todas las celdas
- * Costo reducido = cij - (ui + vj)
+ * Fórmula: Ui + Vj - Cij (cambio de fórmula según requerimiento)
  */
 function calcularCostosReducidos(
   problema: ProblemaTransporte,
@@ -170,11 +200,12 @@ function calcularCostosReducidos(
   
   for (let i = 0; i < problema.filas; i++) {
     for (let j = 0; j < problema.columnas; j++) {
-      // Para celdas no básicas, calculo el costo reducido
+      // Para celdas no básicas, calculo las variables no básicas
       if (!solucion[i][j].esBasica) {
         const uiVal = ui[i] ?? 0;
         const vjVal = vj[j] ?? 0;
-        costosReducidos[i][j] = solucion[i][j].costo - (uiVal + vjVal);
+        // Fórmula: Ui + Vj - Cij
+        costosReducidos[i][j] = uiVal + vjVal - solucion[i][j].costo;
       }
     }
   }
@@ -184,20 +215,22 @@ function calcularCostosReducidos(
 
 /**
  * Verifica si la solución es óptima
- * La solución es óptima si todos los costos reducidos son >= 0
+ * La solución es óptima si todas las variables no básicas son <= 0
+ * Buscamos el valor más positivo (theta) para mejorar
  */
 function verificarOptimalidad(
   costosReducidos: number[][],
   solucion: Celda[][]
 ): { esOptima: boolean, celdaMejora: { fila: number, columna: number } | null } {
   
-  let minCostoReducido = 0;
+  let maxCostoReducido = 0;
   let celdaMejora: { fila: number, columna: number } | null = null;
   
   for (let i = 0; i < costosReducidos.length; i++) {
     for (let j = 0; j < costosReducidos[i].length; j++) {
-      if (!solucion[i][j].esBasica && costosReducidos[i][j] < minCostoReducido) {
-        minCostoReducido = costosReducidos[i][j];
+      // Busco el valor MÁS POSITIVO (theta)
+      if (!solucion[i][j].esBasica && costosReducidos[i][j] > maxCostoReducido) {
+        maxCostoReducido = costosReducidos[i][j];
         celdaMejora = { fila: i, columna: j };
       }
     }

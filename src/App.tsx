@@ -2,23 +2,24 @@
 // Componente principal de mi aplicación de Investigación de Operaciones
 // Aquí coordino todos los componentes y manejo el flujo principal de la aplicación
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { ProblemaTransporte, MetodoInicial, Celda, PasoExplicacion } from './tipos/tipos';
-import { EntradaMatriz } from './componentes/EntradaMatriz';
+import { EntradaMatrizModal } from './componentes/EntradaMatrizModal';
+import { BarraNavegacion } from './componentes/BarraNavegacion';
 import { SelectorMetodo } from './componentes/SelectorMetodo';
-import { VisualizadorMatriz } from './componentes/VisualizadorMatriz';
-import { PasosExplicativos } from './componentes/PasosExplicativos';
+import { VisualizadorMatrizMejorado } from './componentes/VisualizadorMatrizMejorado';
+import { PasosExplicativosMejorados } from './componentes/PasosExplicativosMejorados';
 import { esquinaNoroeste, costoMinimo, vogel } from './utilidades/metodosIniciales';
 import { metodoMODI, calcularCostoTotal } from './utilidades/metodoMODI';
 import './App.css';
 
 /**
  * Componente principal de la aplicación
- * Manejo el flujo completo: entrada de datos → método inicial → optimización MODI
+ * Interfaz de una sola página con barra de navegación superior
  */
 function App() {
   
-  // Estados para controlar el flujo de la aplicación
+  // Estados principales
   const [problema, setProblema] = useState<ProblemaTransporte | null>(null);
   const [metodoSeleccionado, setMetodoSeleccionado] = useState<MetodoInicial | null>(null);
   const [solucionInicial, setSolucionInicial] = useState<Celda[][] | null>(null);
@@ -26,6 +27,50 @@ function App() {
   const [pasos, setPasos] = useState<PasoExplicacion[]>([]);
   const [mostrandoPasos, setMostrandoPasos] = useState<boolean>(false);
   const [resolviendo, setResolviendo] = useState<boolean>(false);
+  
+  // Estados para controlar los modales
+  const [mostrarModalProblema, setMostrarModalProblema] = useState<boolean>(false);
+  const [mostrarSelectorMetodo, setMostrarSelectorMetodo] = useState<boolean>(false);
+  
+  // Inicializo tooltips de Bootstrap cuando cambia el estado
+  useEffect(() => {
+    // Verifico que Bootstrap esté cargado
+    if (typeof (window as any).bootstrap === 'undefined') {
+      console.warn('Bootstrap no está disponible. Los tooltips no funcionarán.');
+      return;
+    }
+    
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltips = Array.from(tooltipTriggerList).map(
+      (el) => {
+        try {
+          return new (window as any).bootstrap.Tooltip(el);
+        } catch (error) {
+          console.error('Error al inicializar tooltip:', error);
+          return null;
+        }
+      }
+    );
+    
+    return () => {
+      tooltips.forEach(t => {
+        if (t && typeof t.dispose === 'function') {
+          try {
+            t.dispose();
+          } catch (error) {
+            console.error('Error al destruir tooltip:', error);
+          }
+        }
+      });
+    };
+  }, [solucionInicial, solucionOptima, pasos, mostrandoPasos]);
+  
+  // Al inicio, muestro el modal para crear un problema
+  useEffect(() => {
+    if (!problema) {
+      setMostrarModalProblema(true);
+    }
+  }, [problema]);
   
   /**
    * Cuando el usuario crea un problema, lo guardo y reinicio el proceso
@@ -37,12 +82,7 @@ function App() {
     setSolucionOptima(null);
     setPasos([]);
     setMostrandoPasos(false);
-    
-    // Hago scroll hacia el selector de método
-    setTimeout(() => {
-      const selector = document.getElementById('selector-metodo');
-      selector?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
+    setMostrarSelectorMetodo(true);
   };
   
   /**
@@ -54,6 +94,7 @@ function App() {
     setResolviendo(true);
     setMetodoSeleccionado(metodo);
     setMostrandoPasos(false);
+    setMostrarSelectorMetodo(false);
     
     // Uso setTimeout para que el UI se actualice antes de realizar cálculos pesados
     setTimeout(() => {
@@ -75,17 +116,10 @@ function App() {
       setSolucionInicial(solucionInicialCalculada);
       
       // Aplico el método MODI para optimizar
-      // Primera vez sin generar pasos (para mostrar resultado rápido)
-      const resultado = metodoMODI(problema, solucionInicialCalculada, false);
+      const resultado = metodoMODI(problema, solucionInicialCalculada, metodo, false);
       setSolucionOptima(resultado.solucion);
       
       setResolviendo(false);
-      
-      // Hago scroll hacia los resultados
-      setTimeout(() => {
-        const resultados = document.getElementById('resultados');
-        resultados?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
     }, 100);
   };
   
@@ -93,22 +127,16 @@ function App() {
    * Genero los pasos explicativos del método MODI
    */
   const generarPasosExplicativos = () => {
-    if (!problema || !solucionInicial) return;
+    if (!problema || !solucionInicial || !metodoSeleccionado) return;
     
     setResolviendo(true);
     
     setTimeout(() => {
       // Ahora sí genero los pasos
-      const resultado = metodoMODI(problema, solucionInicial, true);
+      const resultado = metodoMODI(problema, solucionInicial, metodoSeleccionado, true);
       setPasos(resultado.pasos);
       setMostrandoPasos(true);
       setResolviendo(false);
-      
-      // Hago scroll hacia los pasos
-      setTimeout(() => {
-        const pasosDiv = document.getElementById('pasos-explicativos');
-        pasosDiv?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
     }, 100);
   };
   
@@ -122,176 +150,173 @@ function App() {
     setSolucionOptima(null);
     setPasos([]);
     setMostrandoPasos(false);
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setMostrarModalProblema(true);
   };
   
   return (
-    <div className="container py-5">
-      {/* Encabezado de la aplicación */}
-      <div className="text-center mb-5">
-        <h1 className="display-4 fw-bold text-primary mb-3">
-          🎓 Investigación de Operaciones
-        </h1>
-        <h2 className="h4 text-secondary mb-4">
-          Método de Multiplicadores (MODI)
-        </h2>
-        <p className="lead text-muted">
-          Sistema para resolver problemas de transporte usando el Método de Distribución Modificada
-        </p>
-      </div>
+    <div style={{ minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
+      {/* Barra de navegación superior */}
+      <BarraNavegacion
+        onNuevoProblema={reiniciar}
+        onEditarProblema={() => setMostrarModalProblema(true)}
+        onCambiarMetodo={() => {setMostrarSelectorMetodo(true); setMostrandoPasos(false);}}
+        onVerPasos={() => {
+          if (!mostrandoPasos) {
+            generarPasosExplicativos();
+          } else {
+            setMostrandoPasos(false);
+          }
+        }}
+        hayProblema={problema !== null}
+        haySolucion={solucionOptima !== null}
+        metodoActual={metodoSeleccionado}
+        mostrandoPasos={mostrandoPasos}
+      />
       
-      {/* Entrada de datos del problema */}
-      {!problema && (
-        <EntradaMatriz onProblemaCreado={handleProblemaCreado} />
-      )}
-      
-      {/* Selector de método inicial */}
-      {problema && !solucionInicial && (
-        <div id="selector-metodo">
-          <SelectorMetodo 
-            onMetodoSeleccionado={handleMetodoSeleccionado}
-            metodoActual={metodoSeleccionado}
-          />
-          
-          {resolviendo && (
-            <div className="text-center my-5">
-              <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Calculando...</span>
-              </div>
-              <p className="mt-3 text-muted">Resolviendo el problema...</p>
-            </div>
-          )}
-        </div>
-      )}
-      
-      {/* Resultados */}
-      {solucionInicial && solucionOptima && problema && (
-        <div id="resultados">
-          {/* Solución Inicial */}
-          <div className="mb-4">
-            <VisualizadorMatriz
-              matriz={solucionInicial}
-              oferta={problema.oferta}
-              demanda={problema.demanda}
-              titulo={`📊 Solución Inicial - Método: ${
-                metodoSeleccionado === 'esquina-noroeste' ? 'Esquina Noroeste' :
-                metodoSeleccionado === 'costo-minimo' ? 'Costo Mínimo' :
-                'Vogel (VAM)'
-              }`}
-              mostrarCostoTotal={true}
-            />
-          </div>
-          
-          {/* Solución Óptima */}
-          <div className="mb-4">
-            <VisualizadorMatriz
-              matriz={solucionOptima}
-              oferta={problema.oferta}
-              demanda={problema.demanda}
-              titulo="✅ Solución Óptima - Método MODI"
-              mostrarCostoTotal={true}
-            />
-          </div>
-          
-          {/* Comparación de costos */}
-          <div className="card shadow mb-4">
-            <div className="card-body">
-              <h4 className="card-title text-primary mb-3">📈 Comparación de Resultados</h4>
-              
-              <div className="row text-center">
-                <div className="col-md-4">
-                  <div className="p-3 bg-light rounded">
-                    <h5 className="text-muted">Costo Inicial</h5>
-                    <p className="display-6 fw-bold text-warning mb-0">
-                      ${calcularCostoTotal(solucionInicial).toFixed(2)}
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="col-md-4">
-                  <div className="p-3 bg-light rounded">
-                    <h5 className="text-muted">Costo Óptimo</h5>
-                    <p className="display-6 fw-bold text-success mb-0">
-                      ${calcularCostoTotal(solucionOptima).toFixed(2)}
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="col-md-4">
-                  <div className="p-3 bg-light rounded">
-                    <h5 className="text-muted">Ahorro</h5>
-                    <p className="display-6 fw-bold text-primary mb-0">
-                      ${(calcularCostoTotal(solucionInicial) - calcularCostoTotal(solucionOptima)).toFixed(2)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Porcentaje de mejora */}
-              <div className="mt-4 text-center">
-                <h5>
-                  Mejora del {
-                    (((calcularCostoTotal(solucionInicial) - calcularCostoTotal(solucionOptima)) / 
-                    calcularCostoTotal(solucionInicial)) * 100).toFixed(2)
-                  }%
-                </h5>
-              </div>
+      {/* Contenido principal */}
+      <div className="container-fluid px-4 pb-4">
+        
+        {/* Selector de método (si es necesario) */}
+        {problema && mostrarSelectorMetodo && (
+          <div className="row mb-3">
+            <div className="col-12">
+              <SelectorMetodo 
+                onMetodoSeleccionado={handleMetodoSeleccionado}
+                metodoActual={metodoSeleccionado}
+              />
             </div>
           </div>
-          
-          {/* Botones de acción */}
-          <div className="row mb-4">
-            <div className="col-md-6">
-              <button 
-                className="btn btn-success btn-lg w-100"
-                onClick={generarPasosExplicativos}
-                disabled={resolviendo || mostrandoPasos}
-              >
-                📚 Ver Solución Paso a Paso
-              </button>
+        )}
+        
+        {/* Indicador de carga */}
+        {resolviendo && (
+          <div className="text-center my-5">
+            <div className="spinner-border text-primary" style={{width: '3rem', height: '3rem'}}>
+              <span className="visually-hidden">Calculando...</span>
+            </div>
+            <p className="mt-3 text-muted">
+              {mostrandoPasos ? 'Generando explicación paso a paso...' : 'Resolviendo el problema...'}
+            </p>
+          </div>
+        )}
+        
+        {/* Resultados */}
+        {!resolviendo && solucionInicial && solucionOptima && problema && !mostrandoPasos && (
+          <>
+            {/* Comparación lado a lado */}
+            <div className="row mb-3">
+              <div className="col-lg-6">
+                <VisualizadorMatrizMejorado
+                  matriz={solucionInicial}
+                  oferta={problema.oferta}
+                  demanda={problema.demanda}
+                  nombresOrigenes={problema.nombresOrigenes}
+                  nombresDestinos={problema.nombresDestinos}
+                  titulo={`📊 Solución Inicial - ${
+                    metodoSeleccionado === 'esquina-noroeste' ? 'Esquina Noroeste' :
+                    metodoSeleccionado === 'costo-minimo' ? 'Costo Mínimo' :
+                    'Vogel (VAM)'
+                  }`}
+                  mostrarCostoTotal={true}
+                />
+              </div>
+              
+              <div className="col-lg-6">
+                <VisualizadorMatrizMejorado
+                  matriz={solucionOptima}
+                  oferta={problema.oferta}
+                  demanda={problema.demanda}
+                  nombresOrigenes={problema.nombresOrigenes}
+                  nombresDestinos={problema.nombresDestinos}
+                  titulo="✅ Solución Óptima - Método MODI"
+                  mostrarCostoTotal={true}
+                />
+              </div>
             </div>
             
-            <div className="col-md-6">
-              <button 
-                className="btn btn-secondary btn-lg w-100"
-                onClick={reiniciar}
-              >
-                🔄 Resolver Otro Problema
-              </button>
-            </div>
-          </div>
-          
-          {resolviendo && mostrandoPasos === false && (
-            <div className="text-center my-5">
-              <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Generando pasos...</span>
+            {/* Comparación de resultados */}
+            <div className="row">
+              <div className="col-12">
+                <div className="card shadow-sm mb-3">
+                  <div className="card-body">
+                    <h5 className="card-title text-primary mb-3">📈 Comparación de Resultados</h5>
+                    
+                    <div className="row text-center g-3">
+                      <div className="col-md-4">
+                        <div className="p-3 bg-light rounded">
+                          <h6 className="text-muted">Costo Inicial</h6>
+                          <p className="display-6 fw-bold text-warning mb-0">
+                            ${calcularCostoTotal(solucionInicial).toFixed(2)}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div className="col-md-4">
+                        <div className="p-3 bg-light rounded">
+                          <h6 className="text-muted">Costo Óptimo</h6>
+                          <p className="display-6 fw-bold text-success mb-0">
+                            ${calcularCostoTotal(solucionOptima).toFixed(2)}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div className="col-md-4">
+                        <div className="p-3 bg-light rounded">
+                          <h6 className="text-muted">Ahorro</h6>
+                          <p className="display-6 fw-bold text-primary mb-0">
+                            ${(calcularCostoTotal(solucionInicial) - calcularCostoTotal(solucionOptima)).toFixed(2)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-3 text-center">
+                      <h5 className="text-success">
+                        Mejora del {
+                          (((calcularCostoTotal(solucionInicial) - calcularCostoTotal(solucionOptima)) / 
+                          calcularCostoTotal(solucionInicial)) * 100).toFixed(2)
+                        }%
+                      </h5>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <p className="mt-3 text-muted">Generando explicación paso a paso...</p>
             </div>
-          )}
-          
-          {/* Pasos explicativos */}
-          {mostrandoPasos && pasos.length > 0 && (
-            <div id="pasos-explicativos">
-              <PasosExplicativos
+          </>
+        )}
+        
+        {/* Pasos explicativos */}
+        {!resolviendo && mostrandoPasos && pasos.length > 0 && problema && (
+          <div className="row">
+            <div className="col-12">
+              <PasosExplicativosMejorados
                 pasos={pasos}
                 oferta={problema.oferta}
                 demanda={problema.demanda}
+                nombresOrigenes={problema.nombresOrigenes}
+                nombresDestinos={problema.nombresDestinos}
               />
             </div>
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
+      
+      {/* Modal de entrada de datos */}
+      <EntradaMatrizModal
+        mostrar={mostrarModalProblema}
+        onCerrar={() => setMostrarModalProblema(false)}
+        onProblemaCreado={handleProblemaCreado}
+        problemaActual={problema}
+      />
       
       {/* Footer */}
-      <footer className="mt-5 pt-4 border-top text-center text-muted">
-        <p>
-          💡 Sistema de Investigación de Operaciones - Método MODI
-        </p>
-        <p className="small">
-          Desarrollado con React + TypeScript + Bootstrap
-        </p>
+      <footer className="bg-white border-top py-3 mt-5">
+        <div className="container text-center text-muted">
+          <p className="mb-1">
+            💡 Sistema de Investigación de Operaciones - Método MODI
+          </p>
+          <small>Desarrollado con React + TypeScript + Bootstrap</small>
+        </div>
       </footer>
     </div>
   );

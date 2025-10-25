@@ -20,6 +20,8 @@ export interface ProblemaTransporte {
   demanda: number[];          // Demanda requerida en cada destino
   filas: number;              // Número de orígenes
   columnas: number;           // Número de destinos
+  nombresOrigenes: string[];  // Nombres personalizados de los orígenes
+  nombresDestinos: string[];  // Nombres personalizados de los destinos
 }
 
 // Estructura para almacenar la solución del problema
@@ -32,13 +34,18 @@ export interface Solucion {
 
 // Paso de la explicación del método MODI
 export interface PasoExplicacion {
-  tipo: 'inicial' | 'calcular-ui-vj' | 'calcular-costos-reducidos' | 'verificar-optimalidad' | 'mejorar-solucion' | 'final';
+  tipo: 'inicial' | 'solucion-inicial' | 'calcular-ui-vj' | 'calcular-variables-no-basicas' | 'verificar-optimalidad' | 'mejorar-solucion' | 'final';
   titulo: string;             // Título del paso
   descripcion: string;        // Explicación detallada de lo que hago
   matriz?: Celda[][];         // La matriz en este paso (si aplica)
   ui?: (number | null)[];     // Valores ui para cada fila
   vj?: (number | null)[];     // Valores vj para cada columna
-  costosReducidos?: number[][]; // Costos reducidos calculados
+  variablesNoBasicas?: number[][]; // Variables no básicas (costos reducidos)
   celdaMejora?: {fila: number, columna: number}; // Celda donde voy a mejorar
   ciclo?: {fila: number, columna: number}[];     // El ciclo que formo para mejorar
+  theta?: number;             // Valor theta (cantidad a ajustar)
+  formulasUI?: string[];      // Fórmulas para calcular ui
+  formulasVJ?: string[];      // Fórmulas para calcular vj
+  metodoInicial?: MetodoInicial; // Método inicial usado
+  pasosMetodoInicial?: string[]; // Pasos del método inicial
 }

@@ -26,6 +26,14 @@ export function EntradaMatriz({ onProblemaCreado }: EntradaMatrizProps) {
   const [oferta, setOferta] = useState<number[]>(Array(3).fill(0));
   const [demanda, setDemanda] = useState<number[]>(Array(3).fill(0));
   
+  // Estado para los nombres personalizados
+  const [nombresOrigenes, setNombresOrigenes] = useState<string[]>(
+    Array(3).fill(null).map((_, i) => `Origen ${i + 1}`)
+  );
+  const [nombresDestinos, setNombresDestinos] = useState<string[]>(
+    Array(3).fill(null).map((_, i) => `Destino ${i + 1}`)
+  );
+  
   /**
    * Cuando cambio el número de filas, ajusto mis arrays
    */
@@ -45,6 +53,12 @@ export function EntradaMatriz({ onProblemaCreado }: EntradaMatrizProps) {
     // Ajusto la oferta
     const nuevaOferta = Array(nuevasFilas).fill(null).map((_, i) => oferta[i] ?? 0);
     setOferta(nuevaOferta);
+    
+    // Ajusto los nombres de orígenes
+    const nuevosNombres = Array(nuevasFilas).fill(null).map((_, i) => 
+      nombresOrigenes[i] ?? `Origen ${i + 1}`
+    );
+    setNombresOrigenes(nuevosNombres);
   };
   
   /**
@@ -66,6 +80,12 @@ export function EntradaMatriz({ onProblemaCreado }: EntradaMatrizProps) {
     // Ajusto la demanda
     const nuevaDemanda = Array(nuevasColumnas).fill(null).map((_, i) => demanda[i] ?? 0);
     setDemanda(nuevaDemanda);
+    
+    // Ajusto los nombres de destinos
+    const nuevosNombres = Array(nuevasColumnas).fill(null).map((_, i) => 
+      nombresDestinos[i] ?? `Destino ${i + 1}`
+    );
+    setNombresDestinos(nuevosNombres);
   };
   
   /**
@@ -124,7 +144,9 @@ export function EntradaMatriz({ onProblemaCreado }: EntradaMatrizProps) {
       oferta,
       demanda,
       filas,
-      columnas
+      columnas,
+      nombresOrigenes,
+      nombresDestinos
     };
     
     onProblemaCreado(problema);
@@ -132,17 +154,62 @@ export function EntradaMatriz({ onProblemaCreado }: EntradaMatrizProps) {
   
   /**
    * Cargo un ejemplo predefinido para que sea más fácil probar
+   * Los ejemplos están basados en la imagen proporcionada
    */
-  const cargarEjemplo = () => {
-    setFilas(3);
-    setColumnas(4);
-    setCostos([
-      [8, 6, 10, 9],
-      [9, 12, 13, 7],
-      [14, 9, 16, 5]
-    ]);
-    setOferta([150, 175, 275]);
-    setDemanda([200, 100, 150, 150]);
+  const cargarEjemplo = (numeroEjemplo: number) => {
+    if (numeroEjemplo === 1) {
+      // Ejemplo (a) de la imagen
+      setFilas(3);
+      setColumnas(3);
+      setCostos([
+        [0, 2, 1],
+        [2, 1, 5],
+        [2, 4, 3]
+      ]);
+      setOferta([6, 7, 7]);
+      setDemanda([5, 5, 10]);
+      setNombresOrigenes(['Origen 1', 'Origen 2', 'Origen 3']);
+      setNombresDestinos(['Destino 1', 'Destino 2', 'Destino 3']);
+    } else if (numeroEjemplo === 2) {
+      // Ejemplo (b) de la imagen
+      setFilas(3);
+      setColumnas(3);
+      setCostos([
+        [1, 2, 6],
+        [0, 4, 2],
+        [3, 1, 5]
+      ]);
+      setOferta([7, 12, 11]);
+      setDemanda([10, 10, 10]);
+      setNombresOrigenes(['Origen 1', 'Origen 2', 'Origen 3']);
+      setNombresDestinos(['Destino 1', 'Destino 2', 'Destino 3']);
+    } else if (numeroEjemplo === 3) {
+      // Ejemplo (c) de la imagen
+      setFilas(3);
+      setColumnas(3);
+      setCostos([
+        [5, 1, 8],
+        [2, 4, 0],
+        [3, 6, 7]
+      ]);
+      setOferta([12, 14, 4]);
+      setDemanda([9, 10, 11]);
+      setNombresOrigenes(['Origen 1', 'Origen 2', 'Origen 3']);
+      setNombresDestinos(['Destino 1', 'Destino 2', 'Destino 3']);
+    } else {
+      // Ejemplo del problema con Silos y Molinos de la imagen
+      setFilas(3);
+      setColumnas(4);
+      setCostos([
+        [10, 2, 20, 11],
+        [12, 7, 9, 20],
+        [4, 14, 16, 18]
+      ]);
+      setOferta([15, 25, 10]);
+      setDemanda([5, 15, 15, 15]);
+      setNombresOrigenes(['Silo 1', 'Silo 2', 'Silo 3']);
+      setNombresDestinos(['Molino 1', 'Molino 2', 'Molino 3', 'Molino 4']);
+    }
   };
   
   return (
@@ -177,12 +244,23 @@ export function EntradaMatriz({ onProblemaCreado }: EntradaMatrizProps) {
             />
           </div>
           <div className="col-md-4 d-flex align-items-end">
-            <button 
-              className="btn btn-secondary w-100"
-              onClick={cargarEjemplo}
-            >
-              📝 Cargar Ejemplo
-            </button>
+            <div className="dropdown w-100">
+              <button 
+                className="btn btn-secondary w-100 dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                📝 Cargar Ejemplo
+              </button>
+              <ul className="dropdown-menu">
+                <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); cargarEjemplo(1); }}>Ejemplo (a)</a></li>
+                <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); cargarEjemplo(2); }}>Ejemplo (b)</a></li>
+                <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); cargarEjemplo(3); }}>Ejemplo (c)</a></li>
+                <li><hr className="dropdown-divider" /></li>
+                <li><a className="dropdown-item" href="#" onClick={(e) => { e.preventDefault(); cargarEjemplo(4); }}>Silos y Molinos</a></li>
+              </ul>
+            </div>
           </div>
         </div>
         
