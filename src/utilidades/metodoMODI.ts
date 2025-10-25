@@ -5,7 +5,7 @@
 import type { ProblemaTransporte, Celda, PasoExplicacion, MetodoInicial } from '../tipos/tipos';
 
 /**
- * MÉTODO MODI (Modified Distribution Method)
+ * MÉTODO Multiplicadores
  * Este método mejora una solución inicial hasta encontrar la solución óptima
  * Usa multiplicadores (ui, vj) para identificar si puedo mejorar mi solución
  */

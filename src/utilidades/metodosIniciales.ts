@@ -1,5 +1,5 @@
 // metodosIniciales.ts
-// Aquí implemento los tres métodos para encontrar una solución inicial
+// Aquí implemento los dos métodos para encontrar una solución inicial
 // Estos métodos me dan un punto de partida para luego optimizar con MODI
 
 import type { ProblemaTransporte, Celda } from '../tipos/tipos';
