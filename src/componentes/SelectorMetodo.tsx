@@ -53,7 +53,7 @@ export function SelectorMetodo({ onMetodoSeleccionado, metodoActual }: SelectorM
         
         <p className="text-muted mb-4">
           Elige el método que usaré para encontrar una solución inicial. 
-          Luego optimizaré esa solución usando el Método de Multiplicadores (MODI).
+          Luego optimizaré esa solución usando el Método de Multiplicadores.
         </p>
         
         <div className="row">

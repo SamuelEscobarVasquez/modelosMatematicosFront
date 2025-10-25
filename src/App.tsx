@@ -228,7 +228,7 @@ function App() {
                   demanda={problema.demanda}
                   nombresOrigenes={problema.nombresOrigenes}
                   nombresDestinos={problema.nombresDestinos}
-                  titulo="✅ Solución Óptima - Método MODI"
+                  titulo="✅ Solución Óptima - Método Multiplicadores"
                   mostrarCostoTotal={true}
                 />
               </div>
@@ -269,15 +269,6 @@ function App() {
                         </div>
                       </div>
                     </div>
-                    
-                    <div className="mt-3 text-center">
-                      <h5 className="text-success">
-                        Mejora del {
-                          (((calcularCostoTotal(solucionInicial) - calcularCostoTotal(solucionOptima)) / 
-                          calcularCostoTotal(solucionInicial)) * 100).toFixed(2)
-                        }%
-                      </h5>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -310,12 +301,24 @@ function App() {
       />
       
       {/* Footer */}
-      <footer className="bg-white border-top py-3 mt-5">
+      <footer className="bg-white border-top py-4 mt-5">
         <div className="container text-center text-muted">
-          <p className="mb-1">
-            💡 Sistema de Investigación de Operaciones - Método MODI
+          <p className="mb-2 fw-bold">
+            💡 Sistema de Investigación de Operaciones - Método Multiplicadores
           </p>
-          <small>Desarrollado con React + TypeScript + Bootstrap</small>
+          <div className="row justify-content-center">
+            <div className="col-md-8">
+              <small className="d-block mb-1">
+                <strong>Jeferson David Espina Zabala</strong> - 5190-23-2907
+              </small>
+              <small className="d-block mb-1">
+                <strong>Luis Alejandro Corado Castellanos</strong> - 5190-23-4073
+              </small>
+              <small className="d-block">
+                <strong>Samuel Isaac Escobar Vasquez</strong> - 5190-23-1952
+              </small>
+            </div>
+          </div>
         </div>
       </footer>
     </div>

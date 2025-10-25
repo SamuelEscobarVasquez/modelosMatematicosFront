@@ -242,28 +242,6 @@ export function PasosExplicativosMejorados({
             </p>
           </div>
         )}
-        
-        {/* Navegación inferior */}
-        <div className="row mt-3">
-          <div className="col-6">
-            <button
-              className="btn btn-secondary w-100"
-              onClick={irPasoAnterior}
-              disabled={pasoActual === 0}
-            >
-              ← Anterior
-            </button>
-          </div>
-          <div className="col-6">
-            <button
-              className="btn btn-primary w-100"
-              onClick={irPasoSiguiente}
-              disabled={pasoActual === pasos.length - 1}
-            >
-              Siguiente →
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );

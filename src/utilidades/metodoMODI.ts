@@ -35,7 +35,7 @@ export function metodoMODI(
         metodoInicialUsado === 'esquina-noroeste' ? 'de la Esquina Noroeste' :
         metodoInicialUsado === 'costo-minimo' ? 'del Costo Mínimo' :
         'de Vogel'
-      }. Ahora voy a verificar si es óptima y optimizarla usando el Método MODI (Multiplicadores).`,
+      }. Ahora voy a verificar si es óptima y optimizarla usando el Método de Multiplicadores.`,
       matriz: JSON.parse(JSON.stringify(solucionActual)),
       metodoInicial: metodoInicialUsado
     });

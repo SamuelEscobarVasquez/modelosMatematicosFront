@@ -98,7 +98,7 @@ export function VisualizadorMatriz({
                           bottom: '2px', 
                           right: '4px', 
                           fontSize: '0.7rem',
-                          color: costosReducidos[i][j] < 0 ? 'red' : 'green',
+                          color: costosReducidos[i][j] < 0 ? 'green' : 'red',
                           fontWeight: 'bold'
                         }}>
                           ({costosReducidos[i][j].toFixed(1)})

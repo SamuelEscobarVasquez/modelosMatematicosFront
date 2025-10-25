@@ -34,7 +34,7 @@ export function BarraNavegacion({
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm mb-4 sticky-top">
       <div className="container-fluid">
         <a className="navbar-brand fw-bold" href="#">
-          🎓 Investigación de Operaciones - MODI
+          🎓 Investigación de Operaciones - Método Multiplicadores
         </a>
         
         <button 
