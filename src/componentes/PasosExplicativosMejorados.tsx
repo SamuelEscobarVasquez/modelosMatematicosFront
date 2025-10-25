@@ -149,8 +149,8 @@ export function PasosExplicativosMejorados({
               <div className="col-md-6">
                 <strong>Valores ui (multiplicadores de fila):</strong>
                 <ul className="mb-0 mt-2" style={{ fontSize: '0.9rem' }}>
-                  {paso.formulasUI.map((formula, i) => (
-                    formula && <li key={i}><code>{formula}</code></li>
+                  {paso.formulasUI.map((formula, idx) => (
+                    <li key={idx}><code>{formula}</code></li>
                   ))}
                 </ul>
               </div>
@@ -158,10 +158,39 @@ export function PasosExplicativosMejorados({
               <div className="col-md-6">
                 <strong>Valores vj (multiplicadores de columna):</strong>
                 <ul className="mb-0 mt-2" style={{ fontSize: '0.9rem' }}>
-                  {paso.formulasVJ.map((formula, j) => (
-                    formula && <li key={j}><code>{formula}</code></li>
+                  {paso.formulasVJ.map((formula, idx) => (
+                    <li key={idx}><code>{formula}</code></li>
                   ))}
                 </ul>
+              </div>
+            </div>
+            
+            {/* Resumen de valores calculados */}
+            <div className="mt-3 p-2 bg-light rounded">
+              <strong>Resumen de valores calculados:</strong>
+              <div className="row mt-2">
+                <div className="col-md-6">
+                  <small>
+                    <strong>ui:</strong>{' '}
+                    {paso.ui?.map((val, i) => (
+                      <span key={i} className="me-2">
+                        u<sub>{i + 1}</sub> = <strong>{val !== null ? val : '?'}</strong>
+                        {i < paso.ui!.length - 1 ? ',' : ''}
+                      </span>
+                    ))}
+                  </small>
+                </div>
+                <div className="col-md-6">
+                  <small>
+                    <strong>vj:</strong>{' '}
+                    {paso.vj?.map((val, j) => (
+                      <span key={j} className="me-2">
+                        v<sub>{j + 1}</sub> = <strong>{val !== null ? val : '?'}</strong>
+                        {j < paso.vj!.length - 1 ? ',' : ''}
+                      </span>
+                    ))}
+                  </small>
+                </div>
               </div>
             </div>
           </div>

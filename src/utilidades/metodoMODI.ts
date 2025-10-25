@@ -140,12 +140,26 @@ function calcularMultiplicadores(
   
   const ui: (number | null)[] = Array(problema.filas).fill(null);
   const vj: (number | null)[] = Array(problema.columnas).fill(null);
-  const formulasUI: string[] = Array(problema.filas).fill('');
-  const formulasVJ: string[] = Array(problema.columnas).fill('');
+  const formulasUI: string[] = [];
+  const formulasVJ: string[] = [];
   
   // Empiezo asignando u1 = 0 (primera fila)
   ui[0] = 0;
-  formulasUI[0] = 'u₁ = 0 (valor inicial)';
+  formulasUI.push('u₁ = 0 (valor inicial)');
+  
+  // Obtengo lista de todas las celdas básicas
+  const celdasBasicas: Array<{i: number, j: number, costo: number}> = [];
+  for (let i = 0; i < problema.filas; i++) {
+    for (let j = 0; j < problema.columnas; j++) {
+      if (solucion[i][j].esBasica) {
+        celdasBasicas.push({ i, j, costo: solucion[i][j].costo });
+      }
+    }
+  }
+  
+  console.log('🔍 Celdas básicas encontradas:', celdasBasicas);
+  console.log('🔍 Total de celdas básicas:', celdasBasicas.length);
+  console.log('🔍 Total esperado (m+n-1):', problema.filas + problema.columnas - 1);
   
   // Necesito resolver el sistema de ecuaciones
   // Uso un enfoque iterativo hasta que todos los valores estén calculados
@@ -157,27 +171,51 @@ function calcularMultiplicadores(
     cambios = false;
     iteraciones++;
     
+    console.log(`\n--- Iteración ${iteraciones} ---`);
+    console.log('ui actual:', ui);
+    console.log('vj actual:', vj);
+    
     // Para cada celda básica
-    for (let i = 0; i < problema.filas; i++) {
-      for (let j = 0; j < problema.columnas; j++) {
-        if (solucion[i][j].esBasica) {
-          const costo = solucion[i][j].costo;
-          
-          // Si conozco ui, puedo calcular vj
-          if (ui[i] !== null && vj[j] === null) {
-            vj[j] = costo - ui[i]!;
-            formulasVJ[j] = `v${j + 1} = C${i + 1}${j + 1} - u${i + 1} = ${costo} - ${ui[i]} = ${vj[j]}`;
-            cambios = true;
-          }
-          // Si conozco vj, puedo calcular ui
-          else if (vj[j] !== null && ui[i] === null) {
-            ui[i] = costo - vj[j]!;
-            formulasUI[i] = `u${i + 1} = C${i + 1}${j + 1} - v${j + 1} = ${costo} - ${vj[j]} = ${ui[i]}`;
-            cambios = true;
-          }
-        }
+    for (const celda of celdasBasicas) {
+      const { i, j, costo } = celda;
+      
+      // Si conozco ui, puedo calcular vj
+      if (ui[i] !== null && vj[j] === null) {
+        vj[j] = costo - ui[i]!;
+        const formula = `v${j + 1} = C${i + 1}${j + 1} - u${i + 1} = ${costo} - ${ui[i]} = ${vj[j]}`;
+        formulasVJ.push(formula);
+        console.log(`✅ Calculé vj[${j}]:`, formula);
+        cambios = true;
+      }
+      // Si conozco vj, puedo calcular ui
+      else if (vj[j] !== null && ui[i] === null) {
+        ui[i] = costo - vj[j]!;
+        const formula = `u${i + 1} = C${i + 1}${j + 1} - v${j + 1} = ${costo} - ${vj[j]} = ${ui[i]}`;
+        formulasUI.push(formula);
+        console.log(`✅ Calculé ui[${i}]:`, formula);
+        cambios = true;
       }
     }
+  }
+  
+  console.log('\n🎉 RESULTADO FINAL:');
+  console.log('ui:', ui);
+  console.log('vj:', vj);
+  console.log('formulasUI:', formulasUI);
+  console.log('formulasVJ:', formulasVJ);
+  
+  // Verifico si todos los valores fueron calculados
+  const todosUI = ui.every(val => val !== null);
+  const todosVJ = vj.every(val => val !== null);
+  
+  if (!todosUI) {
+    console.warn('No se pudieron calcular todos los valores ui:', ui);
+    formulasUI.push('⚠️ Advertencia: No se pudieron calcular todos los valores ui');
+  }
+  
+  if (!todosVJ) {
+    console.warn('No se pudieron calcular todos los valores vj:', vj);
+    formulasVJ.push('⚠️ Advertencia: No se pudieron calcular todos los valores vj');
   }
   
   return { ui, vj, formulasUI, formulasVJ };
@@ -330,15 +368,19 @@ function ajustarAsignaciones(
     return nuevaSolucion;
   }
   
-  // Encuentro la cantidad mínima en las celdas donde voy a restar
+  // Encuentro la cantidad mínima en las celdas donde voy a restar (posiciones impares)
   let theta = Infinity;
+  let indiceMinimo = -1;
   
   for (let k = 1; k < ciclo.length; k += 2) {
     const { fila, columna } = ciclo[k];
     if (nuevaSolucion[fila][columna].asignacion < theta) {
       theta = nuevaSolucion[fila][columna].asignacion;
+      indiceMinimo = k;
     }
   }
+  
+  console.log(`🔄 Theta encontrado: ${theta} en posición ${indiceMinimo} del ciclo`);
   
   // Ajusto las asignaciones
   for (let k = 0; k < ciclo.length; k++) {
@@ -351,11 +393,27 @@ function ajustarAsignaciones(
     } else {
       // Resto en posiciones impares
       nuevaSolucion[fila][columna].asignacion -= theta;
-      if (nuevaSolucion[fila][columna].asignacion === 0) {
+      // Solo la primera celda que llega a 0 se marca como no básica
+      // Las demás que lleguen a 0 se mantienen como básicas (degeneración)
+      if (nuevaSolucion[fila][columna].asignacion === 0 && k === indiceMinimo) {
         nuevaSolucion[fila][columna].esBasica = false;
+        console.log(`❌ Celda (${fila + 1}, ${columna + 1}) sale de la base`);
+      } else if (nuevaSolucion[fila][columna].asignacion === 0) {
+        // Esta celda queda con 0 pero sigue siendo básica (caso degenerado)
+        nuevaSolucion[fila][columna].esBasica = true;
+        console.log(`⚠️ Celda (${fila + 1}, ${columna + 1}) es degenerada (0 pero básica)`);
       }
     }
   }
+  
+  // Verifico cuántas celdas básicas hay después del ajuste
+  let conteoBasicas = 0;
+  for (let i = 0; i < nuevaSolucion.length; i++) {
+    for (let j = 0; j < nuevaSolucion[i].length; j++) {
+      if (nuevaSolucion[i][j].esBasica) conteoBasicas++;
+    }
+  }
+  console.log(`📊 Celdas básicas después del ajuste: ${conteoBasicas}`);
   
   return nuevaSolucion;
 }
