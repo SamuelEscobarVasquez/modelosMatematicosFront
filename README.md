@@ -1,14 +1,12 @@
 # 📊 Sistema de Investigación de Operaciones - Método Multiplicadores# React + TypeScript + Vite
 
+## Manual de Usuario
 
-
-## Manual de UsuarioThis template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-**Aplicación:** Métodos de Solución Inicial del Problema de Transporte  
+**Aplicación:** Métodos de Solución Inicial del Problema de Transporte
 
 **Métodos incluidos:** Esquina Noroeste (North-West) y Costo Mínimo  Currently, two official plugins are available:
 
-**Lenguaje:** TypeScript  
+**Lenguaje:** TypeScript
 
 **Framework:** React 19 + Vite- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
 
@@ -23,70 +21,36 @@
 The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
 
 1. [Objetivo](#1-objetivo)
-
-2. [Requisitos](#2-requisitos)## Expanding the ESLint configuration
-
+2. [Requisitos](#2-requisitos)
 3. [Instalación y Ejecución](#3-instalación-y-ejecución)
-
-4. [Flujo de Uso](#4-flujo-de-uso)If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
+4. [Flujo de Uso](#4-flujo-de-uso)
 5. [Pantallas y Controles](#5-pantallas-y-controles)
-
-6. [Métodos Implementados](#6-métodos-implementados)```js
-
-7. [Formato de Entrada](#7-formato-de-entrada)export default defineConfig([
-
-8. [Ejemplo de Corrida de Programa](#8-ejemplo-de-corrida-de-programa)  globalIgnores(['dist']),
-
-9. [Interpretación de Resultados](#9-interpretación-de-resultados)  {
-
-10. [Errores y Soluciones](#10-errores-y-cómo-resolverlos)    files: ['**/*.{ts,tsx}'],
-
-11. [Preguntas Frecuentes](#11-preguntas-frecuentes)    extends: [
-
-12. [Descripción del Proyecto](#12-descripción-del-proyecto)      // Other configs...
-
-13. [Tecnologías Usadas](#13-tecnologías-usadas)
-
-      // Remove tseslint.configs.recommended and replace with this
-
----      tseslint.configs.recommendedTypeChecked,
-
-      // Alternatively, use this for stricter rules
+6. [Métodos Implementados](#6-métodos-implementados)
+7. [Formato de Entrada](#7-formato-de-entrada)
+8. [Ejemplo de Corrida de Programa](#8-ejemplo-de-corrida-de-programa)
+9. [Interpretación de Resultados](#9-interpretación-de-resultados)
+10. [Errores y Soluciones](#10-errores-y-cómo-resolverlos)
+11. [Preguntas Frecuentes](#11-preguntas-frecuentes)
+12. [Descripción del Proyecto](#12-descripción-del-proyecto)
+13. [Tecnologías Usada](#13-tecnologías-usadas)
 
 ## 1. 🎯 Objetivo      tseslint.configs.strictTypeChecked,
 
-      // Optionally, add this for stylistic rules
+Esta aplicación permite resolver **Problemas de Transporte** utilizando dos métodos iniciales de asignación (Esquina Noroeste y Costo Mínimo) y optimizarlos mediante el **Método de Multiplicadores (MODI - Modified Distribution Method)**.  
 
-Esta aplicación permite resolver **Problemas de Transporte** utilizando dos métodos iniciales de asignación (Esquina Noroeste y Costo Mínimo) y optimizarlos mediante el **Método de Multiplicadores (MODI - Modified Distribution Method)**.      tseslint.configs.stylisticTypeChecked,
+### Objetivos específicos: 
 
-
-
-### Objetivos específicos:      // Other configs...
-
-- ✅ Calcular una solución inicial factible para problemas de transporte    ],
-
-- ✅ Optimizar la solución inicial mediante el Método de Multiplicadores    languageOptions: {
-
-- ✅ Visualizar paso a paso el proceso de optimización      parserOptions: {
-
-- ✅ Comparar costos entre la solución inicial y la óptima        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-
-- ✅ Proporcionar una interfaz intuitiva y educativa        tsconfigRootDir: import.meta.dirname,
-
-      },
-
----      // other options...
-
-    },
+- ✅ Calcular una solución inicial factible para problemas de transporte.
+- ✅ Optimizar la solución inicial mediante el Método de Multiplicadores.
+- ✅ Visualizar paso a paso el proceso de optimización.
+- ✅ Comparar costos entre la solución inicial y la óptima.
+- ✅ Proporcionar una interfaz intuitiva y educativa 
 
 ## 2. 💻 Requisitos  },
 
 ])
 
 ### Requisitos del Sistema```
-
-
 
 | Componente | Versión Mínima | Recomendada |You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
@@ -106,7 +70,7 @@ export default defineConfig([
 
 ### Dependencias Principales  globalIgnores(['dist']),
 
-```json  {
+```json
 
 {    files: ['**/*.{ts,tsx}'],
 
@@ -151,11 +115,13 @@ cd InvestigacionOperacionesModelosMatematicos
 ```
 
 #### Paso 2: Instalar dependencias
+
 ```bash
 npm install
 ```
 
 #### Paso 3: Ejecutar en modo desarrollo
+
 ```bash
 npm run dev
 ```
@@ -163,6 +129,7 @@ npm run dev
 La aplicación se abrirá automáticamente en `http://localhost:5173`
 
 #### Comandos adicionales
+
 ```bash
 # Verificar errores de TypeScript
 npm run lint
@@ -177,21 +144,27 @@ npm run preview
 ### B. Modo Ejecutable/Entrega
 
 #### Opción 1: Build para producción
+
 ```bash
 npm run build
 ```
+
 Los archivos compilados estarán en la carpeta `dist/`. Para servir:
+
 ```bash
 npm run preview
 ```
 
 #### Opción 2: Despliegue web
+
 Los archivos en `dist/` pueden ser desplegados en:
+
 - **Netlify**: Arrastrar carpeta `dist/`
 - **Vercel**: Conectar repositorio GitHub
 - **GitHub Pages**: Configurar workflow de CI/CD
 
 #### Opción 3: Servidor local simple
+
 ```bash
 # Instalar servidor HTTP global
 npm install -g http-server
@@ -252,21 +225,24 @@ Acceder en: `http://localhost:8080`
 ### 5.1 Barra de Navegación Superior
 
 ![Barra de Navegación](docs/images/barra-navegacion.png)
+
 <!-- Insertar imagen aquí -->
 
-| Botón | Función | Disponibilidad |
-|-------|---------|----------------|
-| **➕ NUEVO PROBLEMA** | Crear un problema desde cero | Siempre |
-| **✏️ EDITAR VALORES** | Modificar el problema actual | Cuando hay problema cargado |
-| **🔄 RESOLVER CON OTRO MÉTODO** | Cambiar método inicial | Cuando hay solución |
-| **👁️ VER PASOS / OCULTAR PASOS** | Mostrar/ocultar explicación detallada | Cuando hay solución |
+| Botón                                   | Función                               | Disponibilidad              |
+| ---------------------------------------- | -------------------------------------- | --------------------------- |
+| **➕ NUEVO PROBLEMA**              | Crear un problema desde cero           | Siempre                     |
+| **✏️ EDITAR VALORES**            | Modificar el problema actual           | Cuando hay problema cargado |
+| **🔄 RESOLVER CON OTRO MÉTODO**   | Cambiar método inicial                | Cuando hay solución        |
+| **👁️ VER PASOS / OCULTAR PASOS** | Mostrar/ocultar explicación detallada | Cuando hay solución        |
 
 ### 5.2 Modal de Entrada de Datos
 
 ![Modal de Entrada](docs/images/modal-entrada.png)
+
 <!-- Insertar imagen aquí -->
 
 **Controles:**
+
 - **Orígenes (Filas)**: Selector numérico 2-10
 - **Destinos (Columnas)**: Selector numérico 2-10
 - **Cargar Ejemplo**: Menú desplegable con 4 ejemplos predefinidos
@@ -282,18 +258,22 @@ Acceder en: `http://localhost:8080`
 ### 5.3 Selector de Método
 
 ![Selector de Método](docs/images/selector-metodo.png)
+
 <!-- Insertar imagen aquí -->
 
 Dos tarjetas interactivas:
+
 - **↖️ Esquina Noroeste** (Básico)
 - **💰 Costo Mínimo** (Intermedio)
 
 ### 5.4 Visualización de Resultados
 
 ![Comparación de Resultados](docs/images/comparacion-resultados.png)
+
 <!-- Insertar imagen aquí -->
 
 **Elementos visuales:**
+
 - **Matriz de Solución Inicial**: Muestra asignaciones con método seleccionado
 - **Matriz de Solución Óptima**: Resultado optimizado con Método Multiplicadores
 - **Código de colores**:
@@ -306,9 +286,11 @@ Dos tarjetas interactivas:
 ### 5.5 Vista Paso a Paso
 
 ![Vista Paso a Paso](docs/images/vista-paso-a-paso.png)
+
 <!-- Insertar imagen aquí -->
 
 **Componentes:**
+
 - Barra de progreso (Paso X de Y)
 - Botones de navegación ← Anterior / Siguiente →
 - Título y descripción del paso actual
@@ -322,10 +304,11 @@ Dos tarjetas interactivas:
 
 ### 6.1 Método de la Esquina Noroeste (North-West Corner)
 
-**Descripción:**  
+**Descripción:**
 Método heurístico simple que comienza en la celda superior izquierda (esquina noroeste) y asigna la máxima cantidad posible, moviéndose hacia la derecha o hacia abajo según se agote la oferta o se satisfaga la demanda.
 
 **Algoritmo:**
+
 ```
 1. Iniciar en celda (1,1) - esquina superior izquierda
 2. Asignar: min(oferta[i], demanda[j])
@@ -336,6 +319,7 @@ Método heurístico simple que comienza en la celda superior izquierda (esquina 
 ```
 
 **Características:**
+
 - ✅ Muy rápido y simple de implementar
 - ✅ Siempre genera una solución factible
 - ❌ No considera los costos, por lo que puede dar soluciones costosas
@@ -345,10 +329,11 @@ Método heurístico simple que comienza en la celda superior izquierda (esquina 
 
 ### 6.2 Método del Costo Mínimo (Minimum Cost)
 
-**Descripción:**  
+**Descripción:**
 Método heurístico que selecciona iterativamente la celda con el menor costo unitario disponible y asigna la máxima cantidad posible, buscando minimizar el costo total desde el inicio.
 
 **Algoritmo:**
+
 ```
 1. Identificar celda (i,j) con menor costo no asignada
 2. Asignar: min(oferta[i], demanda[j])
@@ -359,6 +344,7 @@ Método heurístico que selecciona iterativamente la celda con el menor costo un
 ```
 
 **Características:**
+
 - ✅ Considera los costos en cada asignación
 - ✅ Generalmente produce mejores soluciones iniciales que Esquina Noroeste
 - ✅ Mantiene m + n - 1 variables básicas
@@ -368,10 +354,11 @@ Método heurístico que selecciona iterativamente la celda con el menor costo un
 
 ### 6.3 Método de Multiplicadores (MODI)
 
-**Descripción:**  
+**Descripción:**
 Método de optimización que mejora iterativamente una solución inicial factible hasta encontrar la solución óptima. Utiliza multiplicadores (ui, vj) para evaluar si se puede reducir el costo.
 
 **Algoritmo:**
+
 ```
 REPETIR:
   1. Calcular multiplicadores ui y vj
@@ -400,6 +387,7 @@ HASTA encontrar solución óptima
 ```
 
 **Características:**
+
 - ✅ Garantiza encontrar la solución óptima
 - ✅ Método eficiente para problemas de transporte
 - ✅ Maneja casos degenerados (variables básicas con valor 0)
@@ -413,13 +401,13 @@ HASTA encontrar solución óptima
 
 El sistema valida automáticamente:
 
-| Validación | Regla | Mensaje de Error |
-|------------|-------|------------------|
-| **Dimensiones** | 2 ≤ orígenes, destinos ≤ 10 | "Las dimensiones deben estar entre 2 y 10" |
-| **Balance** | Σ oferta = Σ demanda | "La oferta total (X) debe ser igual a la demanda total (Y)" |
-| **Valores no negativos** | Todos ≥ 0 | "No puede haber valores negativos" |
-| **Valores numéricos** | Tipo `number` | "Ingrese solo números válidos" |
-| **Completitud** | Todos los campos llenos | "Complete todos los campos" |
+| Validación                    | Regla                          | Mensaje de Error                                            |
+| ------------------------------ | ------------------------------ | ----------------------------------------------------------- |
+| **Dimensiones**          | 2 ≤ orígenes, destinos ≤ 10 | "Las dimensiones deben estar entre 2 y 10"                  |
+| **Balance**              | Σ oferta = Σ demanda         | "La oferta total (X) debe ser igual a la demanda total (Y)" |
+| **Valores no negativos** | Todos ≥ 0                     | "No puede haber valores negativos"                          |
+| **Valores numéricos**   | Tipo `number`                | "Ingrese solo números válidos"                            |
+| **Completitud**          | Todos los campos llenos        | "Complete todos los campos"                                 |
 
 ### 7.2 Estructura de Datos
 
@@ -465,30 +453,32 @@ interface ProblemaTransporte {
 
 #### Datos del Problema
 
-| | Molino 1 | Molino 2 | Molino 3 | Molino 4 | **Oferta** |
-|---------|----------|----------|----------|----------|------------|
-| **Silo 1** | 10 | 2 | 20 | 11 | **15** |
-| **Silo 2** | 12 | 7 | 9 | 20 | **25** |
-| **Silo 3** | 4 | 14 | 16 | 18 | **10** |
-| **Demanda** | **5** | **15** | **15** | **15** | **50** |
+|                   | Molino 1    | Molino 2     | Molino 3     | Molino 4     | **Oferta** |
+| ----------------- | ----------- | ------------ | ------------ | ------------ | ---------------- |
+| **Silo 1**  | 10          | 2            | 20           | 11           | **15**     |
+| **Silo 2**  | 12          | 7            | 9            | 20           | **25**     |
+| **Silo 3**  | 4           | 14           | 16           | 18           | **10**     |
+| **Demanda** | **5** | **15** | **15** | **15** | **50**     |
 
 ---
 
 ### 8.2 Método Esquina Noroeste - Asignaciones
 
 ![Esquina Noroeste - Proceso](docs/images/esquina-noroeste-proceso.png)
+
 <!-- Insertar imagen del proceso paso a paso -->
 
 #### Solución Inicial - Esquina Noroeste
 
-| | Molino 1 | Molino 2 | Molino 3 | Molino 4 | Oferta |
-|---------|----------|----------|----------|----------|--------|
-| **Silo 1** | **5** | **10** | - | - | 15 |
-| **Silo 2** | - | **5** | **15** | **5** | 25 |
-| **Silo 3** | - | - | - | **10** | 10 |
-| **Demanda** | 5 | 15 | 15 | 15 | 50 |
+|                   | Molino 1    | Molino 2     | Molino 3     | Molino 4     | Oferta |
+| ----------------- | ----------- | ------------ | ------------ | ------------ | ------ |
+| **Silo 1**  | **5** | **10** | -            | -            | 15     |
+| **Silo 2**  | -           | **5**  | **15** | **5**  | 25     |
+| **Silo 3**  | -           | -            | -            | **10** | 10     |
+| **Demanda** | 5           | 15           | 15           | 15           | 50     |
 
 **Costo Total:**
+
 ```
 Costo = (5×10) + (10×2) + (5×7) + (15×9) + (5×20) + (10×18)
       = 50 + 20 + 35 + 135 + 100 + 180
@@ -496,6 +486,7 @@ Costo = (5×10) + (10×2) + (5×7) + (15×9) + (5×20) + (10×18)
 ```
 
 ![Resultado Esquina Noroeste](docs/images/resultado-esquina-noroeste.png)
+
 <!-- Insertar captura de pantalla del resultado -->
 
 ---
@@ -503,18 +494,20 @@ Costo = (5×10) + (10×2) + (5×7) + (15×9) + (5×20) + (10×18)
 ### 8.3 Método Costo Mínimo - Asignaciones
 
 ![Costo Mínimo - Proceso](docs/images/costo-minimo-proceso.png)
+
 <!-- Insertar imagen del proceso paso a paso -->
 
 #### Solución Inicial - Costo Mínimo
 
-| | Molino 1 | Molino 2 | Molino 3 | Molino 4 | Oferta |
-|---------|----------|----------|----------|----------|--------|
-| **Silo 1** | - | **15** | - | - | 15 |
-| **Silo 2** | - | - | **15** | **10** | 25 |
-| **Silo 3** | **5** | - | - | **5** | 10 |
-| **Demanda** | 5 | 15 | 15 | 15 | 50 |
+|                   | Molino 1    | Molino 2     | Molino 3     | Molino 4     | Oferta |
+| ----------------- | ----------- | ------------ | ------------ | ------------ | ------ |
+| **Silo 1**  | -           | **15** | -            | -            | 15     |
+| **Silo 2**  | -           | -            | **15** | **10** | 25     |
+| **Silo 3**  | **5** | -            | -            | **5**  | 10     |
+| **Demanda** | 5           | 15           | 15           | 15           | 50     |
 
 **Costo Total:**
+
 ```
 Costo = (15×2) + (15×9) + (10×20) + (5×4) + (5×18)
       = 30 + 135 + 200 + 20 + 90
@@ -522,6 +515,7 @@ Costo = (15×2) + (15×9) + (10×20) + (5×4) + (5×18)
 ```
 
 ![Resultado Costo Mínimo](docs/images/resultado-costo-minimo.png)
+
 <!-- Insertar captura de pantalla del resultado -->
 
 ---
@@ -529,11 +523,13 @@ Costo = (15×2) + (15×9) + (10×20) + (5×4) + (5×18)
 ### 8.4 Optimización con Método Multiplicadores
 
 ![Iteraciones MODI](docs/images/iteraciones-modi.png)
+
 <!-- Insertar capturas de las iteraciones -->
 
 #### Iteración 1: Cálculo de Multiplicadores
 
 **Ecuaciones para variables básicas:**
+
 ```
 u₁ = 0 (valor inicial)
 v₂ = C₁₂ - u₁ = 2 - 0 = 2
@@ -545,10 +541,12 @@ v₁ = C₃₁ - u₃ = 4 - 3 = 1
 ```
 
 **Resumen:**
+
 - ui: u₁=0, u₂=5, u₃=3
 - vj: v₁=1, v₂=2, v₃=4, v₄=15
 
 ![Multiplicadores Calculados](docs/images/multiplicadores.png)
+
 <!-- Insertar captura de los multiplicadores -->
 
 #### Iteración 2: Variables No Básicas
@@ -566,18 +564,20 @@ v₁ = C₃₁ - u₃ = 4 - 3 = 1
 ```
 
 ![Variables No Básicas](docs/images/variables-no-basicas.png)
+
 <!-- Insertar captura con las variables calculadas -->
 
 #### Solución Óptima Final
 
-| | Molino 1 | Molino 2 | Molino 3 | Molino 4 | Oferta |
-|---------|----------|----------|----------|----------|--------|
-| **Silo 1** | - | **5** | - | **10** | 15 |
-| **Silo 2** | - | **10** | **15** | **0** | 25 |
-| **Silo 3** | **5** | - | - | **5** | 10 |
-| **Demanda** | 5 | 15 | 15 | 15 | 50 |
+|                   | Molino 1    | Molino 2     | Molino 3     | Molino 4     | Oferta |
+| ----------------- | ----------- | ------------ | ------------ | ------------ | ------ |
+| **Silo 1**  | -           | **5**  | -            | **10** | 15     |
+| **Silo 2**  | -           | **10** | **15** | **0**  | 25     |
+| **Silo 3**  | **5** | -            | -            | **5**  | 10     |
+| **Demanda** | 5           | 15           | 15           | 15           | 50     |
 
 **Costo Óptimo:**
+
 ```
 Costo = (5×2) + (10×11) + (10×7) + (15×9) + (5×4) + (5×18)
       = 10 + 110 + 70 + 135 + 20 + 90
@@ -585,19 +585,21 @@ Costo = (5×2) + (10×11) + (10×7) + (15×9) + (5×4) + (5×18)
 ```
 
 ![Solución Óptima](docs/images/solucion-optima.png)
+
 <!-- Insertar captura de la solución final -->
 
 ### 8.5 Comparación de Resultados
 
 ![Comparación Final](docs/images/comparacion-final.png)
+
 <!-- Insertar captura de la comparación -->
 
-| Método | Costo Total | Mejora vs Anterior | % Mejora |
-|--------|-------------|-------------------|----------|
-| **Esquina Noroeste** | $520.00 | - | - |
-| **Costo Mínimo** | $475.00 | $45.00 | 8.65% |
-| **Método Multiplicadores** | $435.00 | $40.00 | 8.42% |
-| **Mejora Total** | - | **$85.00** | **16.35%** |
+| Método                           | Costo Total      | Mejora vs Anterior | % Mejora         |
+| --------------------------------- | ---------------- | ------------------ | ---------------- |
+| **Esquina Noroeste**        | $520.00          | -                  | -                |
+| **Costo Mínimo**           | $475.00 | $45.00 | 8.65%              |                  |
+| **Método Multiplicadores** | $435.00 | $40.00 | 8.42%              |                  |
+| **Mejora Total**            | -                | **$85.00**   | **16.35%** |
 
 ---
 
@@ -606,6 +608,7 @@ Costo = (5×2) + (10×11) + (10×7) + (15×9) + (5×4) + (5×18)
 ### 9.1 Elementos de la Matriz de Solución
 
 #### Celdas con Asignación (Variables Básicas)
+
 ```
 ┌─────────────┐
 │ Costo: 2    │  ← Costo unitario de transporte
@@ -620,28 +623,32 @@ Costo = (5×2) + (10×11) + (10×7) + (15×9) + (5×4) + (5×18)
 
 ### 9.2 Indicadores en la Vista Paso a Paso
 
-| Símbolo | Significado | Interpretación |
-|---------|-------------|----------------|
-| **ui** | Multiplicador de fila | Valor dual asociado a la oferta del origen i |
-| **vj** | Multiplicador de columna | Valor dual asociado a la demanda del destino j |
-| **θij** | Variable no básica | Mejora potencial al asignar a la celda (i,j) |
-| **[+θ]** | Incremento en el ciclo | Celda donde se suma theta |
-| **[-θ]** | Decremento en el ciclo | Celda donde se resta theta |
-| **→ ← ↑ ↓** | Dirección del ciclo | Flujo de ajuste en la iteración |
+| Símbolo              | Significado              | Interpretación                                |
+| --------------------- | ------------------------ | ---------------------------------------------- |
+| **ui**          | Multiplicador de fila    | Valor dual asociado a la oferta del origen i   |
+| **vj**          | Multiplicador de columna | Valor dual asociado a la demanda del destino j |
+| **θij**        | Variable no básica      | Mejora potencial al asignar a la celda (i,j)   |
+| **[+θ]**       | Incremento en el ciclo   | Celda donde se suma theta                      |
+| **[-θ]**       | Decremento en el ciclo   | Celda donde se resta theta                     |
+| **→ ← ↑ ↓** | Dirección del ciclo     | Flujo de ajuste en la iteración               |
 
 ### 9.3 Interpretación Económica
 
 #### Costo Total
+
 ```
 Costo Total = Σ Σ (Cij × Xij)
               i j
 ```
+
 Representa el costo total de transportar todas las unidades.
 
 #### Porcentaje de Mejora
+
 ```
 % Mejora = (Ahorro / Costo Inicial) × 100
 ```
+
 Indica qué tan buena era la solución inicial comparada con la óptima.
 
 ---
@@ -653,12 +660,14 @@ Indica qué tan buena era la solución inicial comparada con la óptima.
 #### Error: "La oferta total debe ser igual a la demanda total"
 
 **Solución:**
+
 1. Verificar que Σ oferta = Σ demanda
 2. Si el problema es real y desbalanceado, agregar origen o destino ficticio
 
 #### Error: "No puede haber valores negativos"
 
 **Solución:**
+
 - Revisar todos los inputs
 - Asegurar que todos los valores sean ≥ 0
 
@@ -667,6 +676,7 @@ Indica qué tan buena era la solución inicial comparada con la óptima.
 #### Error: "No se pudieron calcular todos los valores ui/vj"
 
 **Solución:**
+
 - El sistema maneja automáticamente la degeneración
 - Si persiste, recargar la página e intentar nuevamente
 
@@ -674,16 +684,16 @@ Indica qué tan buena era la solución inicial comparada con la óptima.
 
 ## 11. ❓ Preguntas Frecuentes
 
-**P: ¿Cuál método inicial debo elegir?**  
-R: 
+**P: ¿Cuál método inicial debo elegir?**R:
+
 - **Esquina Noroeste:** Para entender el concepto básico
 - **Costo Mínimo:** Para obtener mejores soluciones iniciales
 - Ambos llegarán a la misma solución óptima tras aplicar MODI
 
-**P: ¿Por qué hay variables básicas con valor 0?**  
+**P: ¿Por qué hay variables básicas con valor 0?**
 R: Es un caso de **degeneración** en programación lineal. Es normal y el algoritmo lo maneja correctamente.
 
-**P: ¿Puedo exportar los resultados?**  
+**P: ¿Puedo exportar los resultados?**
 R: Recomendamos captura de pantalla (Win + Shift + S)
 
 ---
@@ -695,13 +705,16 @@ Este proyecto fue desarrollado como parte del curso de **Investigación de Opera
 ### Alcance del Sistema
 
 #### ✅ Métodos Iniciales
+
 - Método de la Esquina Noroeste (North-West Corner)
 - Método del Costo Mínimo (Minimum Cost)
 
 #### ✅ Métodos de Optimización
+
 - Método de Multiplicadores (MODI)
 
 #### ✅ Visualización
+
 - Matrices interactivas con código de colores
 - Tooltips informativos
 - Comparación lado a lado de soluciones
@@ -713,13 +726,13 @@ Este proyecto fue desarrollado como parte del curso de **Investigación de Opera
 
 ### Stack Completo
 
-| Tecnología | Versión | Uso |
-|------------|---------|-----|
-| **React** | 19.1.1 | Framework de UI |
-| **TypeScript** | 5.9.3 | Lenguaje principal |
-| **Vite** | 7.1.14 | Build tool |
-| **Bootstrap** | 5.3.8 | Framework CSS |
-| **Node.js** | 20+ | Runtime |
+| Tecnología          | Versión | Uso                |
+| -------------------- | -------- | ------------------ |
+| **React**      | 19.1.1   | Framework de UI    |
+| **TypeScript** | 5.9.3    | Lenguaje principal |
+| **Vite**       | 7.1.14   | Build tool         |
+| **Bootstrap**  | 5.3.8    | Framework CSS      |
+| **Node.js**    | 20+      | Runtime            |
 
 ### Estructura del Proyecto
 
@@ -763,11 +776,11 @@ src/
 
 ## 👥 Equipo de Desarrollo
 
-| Nombre | Carné | Rol |
-|--------|-------|-----|
-| **Jeferson David Espina Zabala** | 5190-23-2907 | Desarrollador |
+| Nombre                                      | Carné       | Rol           |
+| ------------------------------------------- | ------------ | ------------- |
+| **Jeferson David Espina Zabala**      | 5190-23-2907 | Desarrollador |
 | **Luis Alejandro Corado Castellanos** | 5190-23-4073 | Desarrollador |
-| **Samuel Isaac Escobar Vasquez** | 5190-23-1952 | Desarrollador |
+| **Samuel Isaac Escobar Vasquez**      | 5190-23-1952 | Desarrollador |
 
 ---
 
@@ -777,8 +790,8 @@ Este proyecto fue desarrollado con fines académicos para el curso de Investigac
 
 ---
 
-**Versión del Manual:** 1.0  
-**Última actualización:** Octubre 2025  
+**Versión del Manual:** 1.0
+**Última actualización:** Octubre 2025
 **Versión de la Aplicación:** 1.0.0
 
 ---
